@@ -1,13 +1,11 @@
 import { NewSeminarSession, SeminarSessionUpdate } from "@/models";
 import * as repo from "@/repos/seminarSession";
 import { getTimestamp } from "@/utils";
-import { SeminarSession } from "cyborg-types";
+import { SeminarSession } from "cyborg-utils";
 import { nanoid } from "nanoid";
 
 class SeminarSessionService {
   get = async (id: string): Promise<SeminarSession | undefined> => {
-    if (!id) throw TypeError;
-
     return await repo.findSeminarSessionById(id);
   };
 
@@ -31,14 +29,13 @@ class SeminarSessionService {
     id: string,
     updates: SeminarSessionUpdate,
   ): Promise<SeminarSession> => {
-    if (!id) throw TypeError;
     await repo.updateSeminarSession(id, {
       ...updates,
       updatedAt: getTimestamp(),
     });
-    const seminar = await repo.findSeminarSessionById(id);
-    if (!seminar) throw TypeError;
-    return seminar;
+    const session = await repo.findSeminarSessionById(id);
+    if (!session) throw Error("unable to retrieve seminar");
+    return session;
   };
 
   delete = async (id: string): Promise<SeminarSession | undefined> => {

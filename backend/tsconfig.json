@@ -10,10 +10,11 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "isolatedModules": true,
+    "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"],
+      "cyborg-utils/*": ["../cyborg-utils/src/*"]
     }
-  }
+  },
+  "references": [{ "path": "../cyborg-utils" }]
 }

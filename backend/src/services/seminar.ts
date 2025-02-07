@@ -1,14 +1,11 @@
-import logger from "@/logger";
 import { NewSeminar, SeminarUpdate } from "@/models";
 import * as repo from "@/repos/seminar";
 import { getTimestamp } from "@/utils";
-import { Seminar } from "cyborg-types";
+import { Seminar } from "cyborg-utils";
 import { nanoid } from "nanoid";
 
 class SeminarService {
   get = async (id: string): Promise<Seminar | undefined> => {
-    if (!id) throw TypeError;
-
     return await repo.findSeminarById(id);
   };
 
@@ -17,11 +14,6 @@ class SeminarService {
   };
 
   create = async (title: string): Promise<Seminar> => {
-    if (!title) {
-      logger.error("unable to create seminar with empty title");
-      throw TypeError;
-    }
-
     const newSeminar: NewSeminar = {
       id: nanoid(),
       title,
@@ -32,10 +24,9 @@ class SeminarService {
   };
 
   update = async (id: string, updates: SeminarUpdate): Promise<Seminar> => {
-    if (!id) throw TypeError;
     await repo.updateSeminar(id, { ...updates, updatedAt: getTimestamp() });
     const seminar = await repo.findSeminarById(id);
-    if (!seminar) throw TypeError;
+    if (!seminar) throw Error("unable to retrieve seminar");
     return seminar;
   };
 

@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { NewSeminar, SeminarUpdate } from "@/models";
-import { Seminar } from "cyborg-types";
+import { Seminar } from "cyborg-utils";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
 
 export async function findSeminarById(id: string) {

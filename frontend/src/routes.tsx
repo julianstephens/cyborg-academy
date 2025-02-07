@@ -1,13 +1,17 @@
+import { useAuth } from "@/components/AuthContext";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import DashboardPage from "@/pages/dashboard";
 import LandingPage from "@/pages/landing";
+import NotFoundPage from "@/pages/not-found";
 import { Route, Routes } from "react-router";
-import { ProtectedRoute } from "./components/ProtectedRoute";
 
 const AppRoutes = () => {
+  const { isLoggedIn } = useAuth();
   return (
     <Routes>
-      <Route index element={<LandingPage />} />
+      <Route index={!isLoggedIn()} path="/" element={<LandingPage />} />
       <Route
+        index={isLoggedIn()}
         path="/dashboard"
         element={
           <ProtectedRoute>
@@ -16,6 +20,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 };

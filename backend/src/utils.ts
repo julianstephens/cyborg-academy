@@ -1,6 +1,5 @@
 import { env } from "@/env";
-import type { APIError } from "cyborg-types";
-import type { User } from "cyborg-types";
+import type { APIError, User } from "cyborg-utils";
 import got from "got";
 import { StatusCodes } from "http-status-codes";
 
@@ -25,3 +24,13 @@ export const getUser = async (token: string) => {
 export const getTimestamp = () => {
   return Math.floor(Date.now() / 1000);
 };
+
+export class IDError extends Error {
+  statusCode: number;
+
+  constructor(msg: string, statusCode: number) {
+    super(msg);
+    this.statusCode = statusCode;
+    this.name = IDError.name;
+  }
+}

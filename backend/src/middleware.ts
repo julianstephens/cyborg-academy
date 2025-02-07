@@ -1,9 +1,8 @@
 /* eslint @typescript-eslint/no-unused-vars: 1 */
 import { env } from "@/env";
 import logger from "@/logger";
-import { apiError } from "@/schemas";
-import { getUser } from "@/utils";
-import type { APIError } from "cyborg-types";
+import { getUser, IDError } from "@/utils";
+import { apiErrorSchema, type APIError } from "cyborg-utils";
 import type { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { z } from "zod";
@@ -36,10 +35,17 @@ export const errorHandler = (
     return next(err);
   }
 
+  if (err instanceof IDError) {
+    res.status(StatusCodes.BAD_REQUEST).json({
+      status: StatusCodes.BAD_REQUEST,
+      message: "invalid resource id",
+    } as APIError);
+  }
+
   const apiErr: z.SafeParseReturnType<
     unknown,
     APIError<unknown>
-  > = apiError.safeParse(err);
+  > = apiErrorSchema.safeParse(err);
   if (apiErr.success) {
     res.status(apiErr.data.status).json(apiErr.data);
     return;
@@ -64,13 +70,27 @@ export const authGuard = async (
       return next();
     } catch {
       req.session.destroy((err) => {
-        res.redirect(`${env.APP_URL}/`);
+        res.redirect(`${env.APP_URL}`);
       });
-      return;
     }
   }
 
   req.session.destroy((err) => {
-    res.redirect(`${env.APP_URL}/`);
+    res.redirect(`${env.APP_URL}`);
   });
+};
+
+export const validateBody = (schema: z.ZodType<unknown>) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    try {
+      schema.parse(req.body);
+      next();
+    } catch (err: unknown) {
+      next({
+        status: StatusCodes.BAD_REQUEST,
+        message: "invalid request body",
+        detail: (err as z.ZodError).errors,
+      } as APIError);
+    }
+  };
 };

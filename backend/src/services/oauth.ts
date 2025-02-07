@@ -1,7 +1,7 @@
 import { env } from "@/env";
 import { Guild, TokenResponse } from "@/types";
 import { getUser } from "@/utils";
-import { isAPIError, type APIError } from "cyborg-types";
+import { isAPIError, type APIError } from "cyborg-utils";
 import type { Request, Response } from "express";
 import got from "got";
 import { StatusCodes } from "http-status-codes";

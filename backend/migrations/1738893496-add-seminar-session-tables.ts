@@ -9,7 +9,9 @@ export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
     .createTable("seminarSession")
     .addColumn("id", "varchar", (col) => col.primaryKey())
-    .addColumn("seminarId", "varchar", (col) => col.notNull())
+    .addColumn("seminarId", "varchar", (col) =>
+      col.references("seminar.id").onDelete("cascade").notNull(),
+    )
     .addColumn("title", "varchar", (col) => col.notNull())
     .addColumn("description", "varchar")
     .addColumn("locked", "boolean", (col) => col.notNull())

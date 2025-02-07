@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { NewSeminarSession, SeminarSessionUpdate } from "@/models";
-import { SeminarSession } from "cyborg-types";
+import { SeminarSession } from "cyborg-utils";
 
 export async function findSeminarSessionById(id: string) {
   return await db

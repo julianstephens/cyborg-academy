@@ -1,4 +1,4 @@
-import type { User } from "cyborg-types";
+import type { User } from "cyborg-utils";
 import React from "react";
 
 export interface ChildrenProps {
@@ -7,4 +7,10 @@ export interface ChildrenProps {
 
 export interface UserProp {
   user: User;
+}
+
+export interface AuthProps extends Partial<UserProp> {
+  isLoggedIn: () => boolean;
+  login: VoidFunction;
+  logout: VoidFunction;
 }
