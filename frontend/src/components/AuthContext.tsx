@@ -1,10 +1,12 @@
 import { AuthProps, ChildrenProps } from "@/types";
 import Cookies from "js-cookie";
 import { createContext, useContext } from "react";
+import { useNavigate } from "react-router";
 
 const AuthContext = createContext({} as AuthProps);
 
 export const AuthProvider = ({ children }: ChildrenProps) => {
+  const goto = useNavigate();
   const login = async () => {
     window.location.replace("/api/auth/discord");
   };
@@ -12,6 +14,7 @@ export const AuthProvider = ({ children }: ChildrenProps) => {
   const logout = () => {
     fetch("/api/auth/logout").catch((err) => {
       console.error(err);
+      goto("/");
     });
   };
 

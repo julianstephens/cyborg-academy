@@ -5,6 +5,8 @@ export async function up(db: Kysely<any>): Promise<void> {
     .createTable("seminar")
     .addColumn("id", "varchar", (col) => col.primaryKey())
     .addColumn("title", "varchar", (col) => col.notNull())
+    .addColumn("createdAt", "bigint", (col) => col.notNull())
+    .addColumn("updatedAt", "bigint", (col) => col.notNull())
     .execute();
   await db.schema
     .createTable("seminarSession")

@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router";
 
 const LandingPage = () => {
-  const { isLoggedIn, login, logout } = useAuth();
+  const { isLoggedIn, login } = useAuth();
   const goto = useNavigate();
 
   useEffect(() => {
@@ -23,9 +23,6 @@ const LandingPage = () => {
       <Heading size="3xl">Cyborg Academy</Heading>
       <Button w="md" onClick={login}>
         Login
-      </Button>
-      <Button w="md" onClick={logout}>
-        Logout
       </Button>
     </Flex>
   );

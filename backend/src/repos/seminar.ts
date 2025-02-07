@@ -1,7 +1,17 @@
 import { db } from "@/db";
 import { NewSeminar, SeminarUpdate } from "@/models";
 import { Seminar } from "cyborg-utils";
+import { Expression } from "kysely";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
+
+const seminarSessions = (seminarId: Expression<string>) => {
+  return jsonArrayFrom(
+    db
+      .selectFrom("seminarSession")
+      .selectAll()
+      .where("seminarSession.seminarId", "=", seminarId),
+  );
+};
 
 export async function findSeminarById(id: string) {
   return await db
@@ -39,13 +49,7 @@ export async function findSeminars(criteria: Partial<Seminar>) {
 
   return await query
     .selectAll()
-    .select((eb) => [
-      jsonArrayFrom(
-        eb
-          .selectFrom("seminarSession")
-          .whereRef("seminarSession.seminarId", "=", "seminar.id"),
-      ).as("sessions"),
-    ])
+    .select(({ ref }) => [seminarSessions(ref("seminar.id")).as("sessions")])
     .execute();
 }
 

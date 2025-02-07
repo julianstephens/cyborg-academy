@@ -13,6 +13,7 @@ export default tseslint.config(
     ignores: [
       "frontend/src/components/ui/*",
       "backend/migrations/*",
+      "backend/scripts/template.ts",
       "**/*.cjs",
     ],
   },

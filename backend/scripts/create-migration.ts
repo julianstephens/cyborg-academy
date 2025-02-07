@@ -1,8 +1,8 @@
+import { getTimestamp } from "@/utils";
 import { copyFile } from "fs/promises";
 import minimist from "minimist";
 import path from "path";
 import { fileURLToPath } from "url";
-import { getTimestamp } from "../../src/utils";
 
 const __filename = fileURLToPath(import.meta.url);
 
@@ -14,10 +14,10 @@ const main = async () => {
   try {
     await copyFile(
       path.join(path.dirname(__filename), "template.ts"),
-      path.join(path.dirname(__filename), "..", filename),
+      path.join(path.dirname(__filename), "migrations", filename),
     );
     console.log("migration created: ");
-  } catch (err) {
+  } catch {
     console.error("unable to create migration");
   }
 };
