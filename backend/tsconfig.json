@@ -1,3 +1,19 @@
 {
-  "extends": "@tsconfig/node22/tsconfig.json"
+  "extends": "@tsconfig/node22/tsconfig.json",
+  "compilerOptions": {
+    "moduleDetection": "force",
+    "module": "esnext",
+    "target": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
+  }
 }
