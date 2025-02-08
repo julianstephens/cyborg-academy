@@ -1,7 +1,7 @@
 import { NewSeminarSession, SeminarSessionUpdate } from "@/models";
 import * as repo from "@/repos/seminarSession";
 import { getTimestamp } from "@/utils";
-import { SeminarSession } from "cyborg-utils";
+import type { SeminarSession } from "cyborg-utils";
 import { nanoid } from "nanoid";
 
 class SeminarSessionService {

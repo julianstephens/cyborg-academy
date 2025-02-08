@@ -19,6 +19,10 @@ export interface User {
 export interface Seminar {
   id: string;
   title: string;
+  slug: string;
+  description?: string;
+  inProgress: boolean;
+  completed: boolean;
   sessions?: SeminarSession[];
   createdAt: number;
   updatedAt: number;
@@ -30,6 +34,7 @@ export interface SeminarSession {
   title: string;
   description: string;
   locked: boolean;
+  order: number;
   readings?: string[];
   notes?: string[];
   createdAt: number;

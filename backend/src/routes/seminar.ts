@@ -3,8 +3,8 @@ import { SeminarService } from "@/services";
 import { IDError } from "@/utils";
 import {
   newSeminarSchema,
-  ResponseObject,
-  Seminar,
+  type ResponseObject,
+  type Seminar,
   seminarUpdateSchema,
 } from "cyborg-utils";
 import type { Request, Response } from "express";
@@ -35,8 +35,7 @@ router.post(
   "/",
   validateBody(newSeminarSchema),
   async (req: Request, res: Response) => {
-    const { title } = req.body;
-    const data = await seminarSVC.create(title);
+    const data = await seminarSVC.create(req.body);
     res.json({ data } as ResponseObject<Seminar>);
   },
 );

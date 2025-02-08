@@ -8,12 +8,18 @@ const main = async () => {
   const numSessions = [6, 3, 10];
 
   for (let i = 0; i < numSeminars; i++) {
-    const sem = await seminarSVC.create("Test " + i);
+    const inProgress = faker.datatype.boolean();
+    const sem = await seminarSVC.create({
+      title: "Test " + i,
+      inProgress,
+      completed: !inProgress,
+    });
     console.log("\n* created seminar: " + sem.title + " (" + sem.id + ")");
     for (let j = 0; j < numSessions[i]; j++) {
       const sess = await sessionSVC.create({
         title: "Test Session " + j,
         description: faker.word.words({ count: { min: 5, max: 10 } }),
+        order: j + 1,
         locked: faker.datatype.boolean(),
         seminarId: sem.id,
       });

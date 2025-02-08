@@ -17,7 +17,13 @@ export const apiErrorSchema = responseWithMessageSchema.extend({
   detail: z.unknown().optional(),
 });
 
-export const newSeminarSchema = z.object({ title: z.string() });
+export const newSeminarSchema = z.object({
+  title: z.string(),
+  slug: z.string(),
+  description: z.string().optional(),
+  inProgress: z.boolean(),
+  completed: z.boolean(),
+});
 
 export const seminarUpdateSchema = newSeminarSchema.partial();
 
@@ -26,6 +32,7 @@ export const newSeminarSessionSchema = z.object({
   seminarId: z.string(),
   description: z.string().optional(),
   locked: z.boolean().default(true),
+  order: z.number().int(),
   readings: z.string().array(),
   notes: z.string().array(),
 });

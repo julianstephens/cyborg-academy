@@ -1,5 +1,5 @@
 import * as handlers from "@/api-handlers";
-import { ResponseObject, Seminar, User } from "cyborg-utils";
+import type { APIError, ResponseObject, Seminar, User } from "cyborg-utils";
 import { createQuery } from "react-query-kit";
 
 export const useCurrentUser = createQuery<ResponseObject<User>>({
@@ -7,7 +7,20 @@ export const useCurrentUser = createQuery<ResponseObject<User>>({
   fetcher: handlers.getAuthMe,
 });
 
-export const useSeminars = createQuery<ResponseObject<Seminar[]>>({
+export const useSeminars = createQuery<
+  ResponseObject<Seminar[]>,
+  null,
+  APIError
+>({
   queryKey: ["/api/seminars"],
   fetcher: handlers.getSeminars,
+});
+
+export const useSeminar = createQuery<
+  ResponseObject<Seminar>,
+  { slug: string },
+  APIError
+>({
+  queryKey: ["/api/seminars"],
+  fetcher: handlers.getSeminar,
 });

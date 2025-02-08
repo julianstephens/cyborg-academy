@@ -1,10 +1,14 @@
 import { NewSeminar, SeminarUpdate } from "@/models";
 import * as repo from "@/repos/seminar";
 import { getTimestamp } from "@/utils";
-import { Seminar } from "cyborg-utils";
+import type { Seminar } from "cyborg-utils";
 import { nanoid } from "nanoid";
 
 class SeminarService {
+  genSlug = (title: string) => {
+    return title.toLowerCase().replace(" ", "-");
+  };
+
   get = async (id: string): Promise<Seminar | undefined> => {
     return await repo.findSeminarById(id);
   };
@@ -13,10 +17,13 @@ class SeminarService {
     return await repo.findSeminars(filters);
   };
 
-  create = async (title: string): Promise<Seminar> => {
+  create = async (
+    seminar: Omit<NewSeminar, "id" | "slug" | "createdAt" | "updatedAt">,
+  ): Promise<Seminar> => {
     const newSeminar: NewSeminar = {
       id: nanoid(),
-      title,
+      ...seminar,
+      slug: this.genSlug(seminar.title),
       createdAt: getTimestamp(),
       updatedAt: getTimestamp(),
     };

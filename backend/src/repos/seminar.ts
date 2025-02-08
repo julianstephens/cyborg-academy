@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { NewSeminar, SeminarUpdate } from "@/models";
-import { Seminar } from "cyborg-utils";
+import type { Seminar } from "cyborg-utils";
 import { Expression } from "kysely";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
 

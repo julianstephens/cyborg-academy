@@ -3,8 +3,8 @@ import { SeminarSessionService } from "@/services";
 import { IDError } from "@/utils";
 import {
   newSeminarSessionSchema,
-  ResponseObject,
-  SeminarSession,
+  type ResponseObject,
+  type SeminarSession,
   seminarSessionUpdateSchema,
 } from "cyborg-utils";
 import type { Request, Response } from "express";

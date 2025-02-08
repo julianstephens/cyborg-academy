@@ -1,3 +1,4 @@
+import { useAuth } from "@/components/AuthContext";
 import { Avatar } from "@/components/ui/avatar";
 import {
   MenuContent,
@@ -7,7 +8,7 @@ import {
 } from "@/components/ui/menu";
 import { UserProp } from "@/types";
 import { Button, Flex, Heading } from "@chakra-ui/react";
-import { useAuth } from "./AuthContext";
+import { Link } from "react-router";
 
 const colorPalette = ["red", "blue", "green", "yellow", "purple", "orange"];
 
@@ -19,8 +20,20 @@ const pickPalette = (name: string) => {
 export const Header = ({ user }: UserProp) => {
   const { logout } = useAuth();
   return (
-    <Flex w="full" justify="space-between">
-      <Heading size="3xl">Cyborg Academy</Heading>
+    <Flex w="full" mb="12" justify="space-between">
+      <Link to="/">
+        <Heading
+          size="3xl"
+          _hover={{
+            // color: "#EFCB68",
+            textDecoration: "underline",
+            transition: "ease",
+            transitionDuration: "moderate",
+          }}
+        >
+          Cyborg Academy
+        </Heading>
+      </Link>
       {user && (
         <MenuRoot>
           <MenuTrigger cursor="pointer" asChild>

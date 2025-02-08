@@ -7,15 +7,17 @@ const AuthContext = createContext({} as AuthProps);
 
 export const AuthProvider = ({ children }: ChildrenProps) => {
   const goto = useNavigate();
+
   const login = async () => {
     window.location.replace("/api/auth/discord");
   };
 
   const logout = () => {
-    fetch("/api/auth/logout").catch((err) => {
-      console.error(err);
-      goto("/");
-    });
+    fetch("/api/auth/logout")
+      .then(() => {
+        goto("/");
+      })
+      .catch((err) => console.error.bind(err));
   };
 
   const isLoggedIn = () => {

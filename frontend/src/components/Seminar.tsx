@@ -1,35 +1,45 @@
-import { Collapsible, Flex, List, Text } from "@chakra-ui/react";
-import { Seminar } from "cyborg-utils";
+import {
+  Link as ChakraLink,
+  Collapsible,
+  Flex,
+  For,
+  List,
+  Show,
+  Text,
+} from "@chakra-ui/react";
+import type { Seminar } from "cyborg-utils";
 import { FaAngleDown } from "react-icons/fa6";
+import { Link } from "react-router";
 
 export const SeminarDisplay = ({ data }: { data: Seminar }) => {
   return (
-    <Collapsible.Root
-      w="3/4"
-      border="1px solid white"
-      borderRadius="lg"
-      paddingX="4"
-    >
+    <Collapsible.Root w="3/4" border="1px solid white" borderRadius="lg" px="4">
       <Collapsible.Trigger w="full" h="14" cursor="pointer" asChild>
         <Flex justify="space-between" align="center">
-          <Text>{data.title}</Text>
+          <ChakraLink variant="underline" asChild>
+            <Link to={`/dashboard/${data.slug}`} state={data}>
+              <Text>{data.title}</Text>
+            </Link>
+          </ChakraLink>
           <FaAngleDown />
         </Flex>
       </Collapsible.Trigger>
       <Collapsible.Content pb="4">
+        {data.description && <Text mb="4">{data.description}</Text>}
         <hr />
-        {data.sessions && data.sessions.length > 0 ? (
+        <Show
+          when={data.sessions && data.sessions.length > 0}
+          fallback={<Text>No seminar sessions scheduled yet</Text>}
+        >
           <Flex direction="column" mt="2">
             <Text>Sessions:</Text>
             <List.Root listStyle="inside">
-              {data.sessions.map((s) => (
-                <List.Item key={s.id}>{s.title}</List.Item>
-              ))}
+              <For each={data.sessions}>
+                {(item) => <List.Item key={item.id}>{item.title}</List.Item>}
+              </For>
             </List.Root>
           </Flex>
-        ) : (
-          <Text>No seminar sessions scheduled yet</Text>
-        )}
+        </Show>
       </Collapsible.Content>
     </Collapsible.Root>
   );

@@ -5,6 +5,9 @@ export async function up(db: Kysely<any>): Promise<void> {
     .createTable("seminar")
     .addColumn("id", "varchar", (col) => col.primaryKey())
     .addColumn("title", "varchar", (col) => col.notNull())
+    .addColumn("description", "varchar")
+    .addColumn("inProgress", "boolean", (col) => col.notNull())
+    .addColumn("completed", "boolean", (col) => col.notNull())
     .addColumn("createdAt", "bigint", (col) => col.notNull())
     .addColumn("updatedAt", "bigint", (col) => col.notNull())
     .execute();
@@ -17,6 +20,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("title", "varchar", (col) => col.notNull())
     .addColumn("description", "varchar")
     .addColumn("locked", "boolean", (col) => col.notNull())
+    .addColumn("order", "int8", (col) => col.notNull())
     .addColumn("readings", sql`varchar[]`)
     .addColumn("notes", sql`varchar[]`)
     .addColumn("createdAt", "bigint", (col) => col.notNull())

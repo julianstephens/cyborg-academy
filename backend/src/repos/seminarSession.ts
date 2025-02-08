@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { NewSeminarSession, SeminarSessionUpdate } from "@/models";
-import { SeminarSession } from "cyborg-utils";
+import type { SeminarSession } from "cyborg-utils";
 
 export async function findSeminarSessionById(id: string) {
   return await db
@@ -41,7 +41,7 @@ export async function findSeminarSessions(criteria: Partial<SeminarSession>) {
     query = query.where("updatedAt", "=", criteria.updatedAt);
   }
 
-  return await query.selectAll().execute();
+  return await query.selectAll().orderBy("order asc").execute();
 }
 
 export async function updateSeminarSession(

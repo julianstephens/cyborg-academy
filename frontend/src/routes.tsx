@@ -3,10 +3,12 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import DashboardPage from "@/pages/dashboard";
 import LandingPage from "@/pages/landing";
 import NotFoundPage from "@/pages/not-found";
+import SeminarPage from "@/pages/seminar";
 import { Route, Routes } from "react-router";
 
 const AppRoutes = () => {
   const { isLoggedIn } = useAuth();
+
   return (
     <Routes>
       <Route index={!isLoggedIn()} path="/" element={<LandingPage />} />
@@ -15,8 +17,15 @@ const AppRoutes = () => {
         path="/dashboard"
         element={
           <ProtectedRoute>
-            {/* @ts-expect-error 2741 */}
             <DashboardPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard/:slug"
+        element={
+          <ProtectedRoute>
+            <SeminarPage />
           </ProtectedRoute>
         }
       />
