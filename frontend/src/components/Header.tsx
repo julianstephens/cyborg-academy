@@ -41,7 +41,7 @@ export const Header = ({ user }: UserProp) => {
               <Avatar
                 size="xl"
                 name={user.username}
-                colorPalette={pickPalette(user.username)}
+                colorPalette={pickPalette(user.username ?? "test")}
                 src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}`}
               />
             </Button>

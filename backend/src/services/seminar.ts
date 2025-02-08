@@ -6,7 +6,7 @@ import { nanoid } from "nanoid";
 
 class SeminarService {
   genSlug = (title: string) => {
-    return title.toLowerCase().replace(" ", "-");
+    return title.toLowerCase().replaceAll(" ", "-");
   };
 
   get = async (id: string): Promise<Seminar | undefined> => {

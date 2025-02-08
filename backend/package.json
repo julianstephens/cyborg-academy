@@ -10,6 +10,8 @@
     "migrate": "tsx ./upgrade-db.ts",
     "new": "tsx ./scripts/create-migration.ts",
     "seed": "tsx ./scripts/seed-db.ts",
+    "seminar": "tsx ./scripts/create-seminar.ts",
+    "session": "tsx ./scripts/create-session.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
