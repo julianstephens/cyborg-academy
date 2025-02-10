@@ -1,19 +1,13 @@
 {
-  "functions": {
-    "api/dist/index.cjs": {
-      "memory": 1024,
-      "maxDuration": 10
-    }
-  },
   "trailingSlash": true,
   "rewrites": [
     {
-      "source": "",
-      "destination": ""
+      "source": "https://cyborg-academy-api.vercel.app/api/v1/:match*",
+      "destination": "/index.cjs/:match*"
     },
     {
       "source": "/api/(.*)",
-      "destination": "https://cyborg-academy-api.vercel.app/api/v1"
+      "destination": "https://cyborg-academy-api.vercel.app/"
     },
     {
       "source": "/",
