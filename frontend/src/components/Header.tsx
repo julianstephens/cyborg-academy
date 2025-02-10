@@ -1,4 +1,3 @@
-import { useAuth } from "@/components/AuthContext";
 import { Avatar } from "@/components/ui/avatar";
 import {
   MenuContent,
@@ -6,6 +5,7 @@ import {
   MenuRoot,
   MenuTrigger,
 } from "@/components/ui/menu";
+import { useAppInfo, useAuth } from "@/hooks";
 import { UserProp } from "@/types";
 import { Button, Flex, Heading } from "@chakra-ui/react";
 import { Link } from "react-router";
@@ -19,6 +19,7 @@ const pickPalette = (name: string) => {
 
 export const Header = ({ user }: UserProp) => {
   const { logout } = useAuth();
+  const { appName } = useAppInfo();
   return (
     <Flex w="full" mb="12" justify="space-between">
       <Link to="/">
@@ -31,7 +32,7 @@ export const Header = ({ user }: UserProp) => {
             transitionDuration: "moderate",
           }}
         >
-          Cyborg Academy
+          {appName}
         </Heading>
       </Link>
       {user && (

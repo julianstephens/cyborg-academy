@@ -1,37 +1,62 @@
-import { AuthProps, ChildrenProps } from "@/types";
-import Cookies from "js-cookie";
-import { createContext, useContext } from "react";
+import { AuthContext, useAppInfo } from "@/hooks";
+import { ChildrenProps } from "@/types";
+import { ResponseObject, User } from "cyborg-utils";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
-const AuthContext = createContext({} as AuthProps);
-
 export const AuthProvider = ({ children }: ChildrenProps) => {
+  const { apiUrl } = useAppInfo();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [checkedAuthStatus, setCheckedAuthStatus] = useState(false);
+  const [user, setUser] = useState<User | undefined>();
   const goto = useNavigate();
 
   const login = async () => {
-    window.location.replace("/api/auth/discord");
+    const res = await fetch(`${apiUrl}/auth/discord`);
+    const loc = res.headers.get("x-location");
+    if (loc) window.location.replace(loc);
   };
 
   const logout = () => {
-    fetch("/api/auth/logout")
+    fetch(`${apiUrl}/auth/logout`)
       .then(() => {
+        setUser(undefined);
         goto("/");
       })
       .catch((err) => console.error.bind(err));
   };
 
-  const isLoggedIn = () => {
-    const sessionID = Cookies.get("connect.sid");
-    return !!sessionID;
+  const checkAuthStatus = async () => {
+    try {
+      const res = await fetch(`${apiUrl}/auth/me`);
+      const data: ResponseObject<User> = await res.json();
+      if (data && data.data) {
+        setUser(data.data);
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+      }
+    } catch {
+      setIsAuthenticated(false);
+    }
+    setCheckedAuthStatus(true);
   };
 
+  useEffect(() => {
+    checkAuthStatus();
+  }, [user, isAuthenticated]);
+
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+    <AuthContext.Provider
+      value={{
+        checkedAuthStatus,
+        isAuthenticated,
+        user,
+        login,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
-};
-
-export const useAuth = () => {
-  return useContext(AuthContext);
 };

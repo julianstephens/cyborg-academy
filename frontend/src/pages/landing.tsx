@@ -1,15 +1,38 @@
-import { useAuth } from "@/components/AuthContext";
+import { useAppInfo, useAuth } from "@/hooks";
 import { Button, Flex, Heading } from "@chakra-ui/react";
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router";
+import { toast } from "react-toastify";
 
 const LandingPage = () => {
-  const { isLoggedIn, login } = useAuth();
+  const { appName, appDescription } = useAppInfo();
+  const [title, setTitle] = useState("");
+  const { isAuthenticated, checkedAuthStatus, login } = useAuth();
   const goto = useNavigate();
 
+  const doLogin = async (e: React.BaseSyntheticEvent) => {
+    e.preventDefault();
+    try {
+      await login();
+    } catch {
+      toast.error("Unable to login. Please try again.", {
+        toastId: "loginErr",
+      });
+    }
+  };
+
   useEffect(() => {
-    if (isLoggedIn()) goto("/dashboard");
-  }, [isLoggedIn, goto]);
+    if (checkedAuthStatus && isAuthenticated) goto("/dashboard");
+  }, [isAuthenticated, checkedAuthStatus, goto]);
+
+  useEffect(() => {
+    setTitle(appName);
+  }, [appName]);
+
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
 
   return (
     <Flex
@@ -20,8 +43,12 @@ const LandingPage = () => {
       align="center"
       gap="6"
     >
-      <Heading size="3xl">Cyborg Academy</Heading>
-      <Button w="md" onClick={login}>
+      <Helmet>
+        <title>{title}</title>
+        <meta name="description" content={appDescription} />
+      </Helmet>
+      <Heading size="3xl">{appName}</Heading>
+      <Button w="md" onClick={doLogin}>
         Login
       </Button>
     </Flex>

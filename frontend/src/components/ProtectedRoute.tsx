@@ -1,24 +1,27 @@
-import { useAuth } from "@/components/AuthContext";
 import { Header } from "@/components/Header";
-import { useCurrentUser } from "@/queries";
+import { useAuth } from "@/hooks";
 import type { ChildrenProps } from "@/types";
 import { Flex } from "@chakra-ui/react";
 import type { User } from "cyborg-utils";
-import React from "react";
-import { Navigate } from "react-router";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router";
 
 export const ProtectedRoute = ({ children }: ChildrenProps) => {
-  const { isLoggedIn } = useAuth();
-  const { data } = useCurrentUser();
+  const goto = useNavigate();
+  const { isAuthenticated, user, checkedAuthStatus } = useAuth();
 
-  if (!isLoggedIn()) return <Navigate to="/" replace />;
+  useEffect(() => {
+    if (checkedAuthStatus && !isAuthenticated) goto("/");
+  }, [checkedAuthStatus, isAuthenticated]);
 
-  children = React.Children.map(children, (el) => {
-    return React.cloneElement(el as React.ReactElement, { user: data?.data });
-  });
+  children = React.Children.map(children, (el) =>
+    React.cloneElement(el as React.ReactElement, {
+      user: user ?? ({} as User),
+    }),
+  );
   return (
     <Flex w="full" h="full" direction="column">
-      <Header user={data?.data ?? ({} as User)} />
+      <Header user={user ?? ({} as User)} />
       {children}
     </Flex>
   );

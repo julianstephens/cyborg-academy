@@ -10,7 +10,14 @@ export interface UserProp {
 }
 
 export interface AuthProps extends Partial<UserProp> {
-  isLoggedIn: () => boolean;
-  login: VoidFunction;
+  checkedAuthStatus: boolean;
+  isAuthenticated: boolean;
+  login: () => Promise<void>;
   logout: VoidFunction;
+}
+
+export interface AppInfo {
+  apiUrl: string;
+  appName: string;
+  appDescription: string;
 }

@@ -15,6 +15,8 @@ export default tseslint.config(
       "backend/migrations/*",
       "backend/scripts/template.ts",
       "**/*.cjs",
+      "**/node_modules/*",
+      "**/dist/*",
     ],
   },
   {
