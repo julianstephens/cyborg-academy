@@ -11,9 +11,9 @@ export default tseslint.config(
   tseslint.configs.recommended,
   {
     ignores: [
-      "frontend/src/components/ui/*",
-      "backend/migrations/*",
-      "backend/scripts/template.ts",
+      "ui/src/components/ui/*",
+      "api/migrations/*",
+      "api/scripts/template.ts",
       "**/*.cjs",
       "**/node_modules/*",
       "**/dist/*",
@@ -29,7 +29,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ["frontend/**/*.{ts,tsx}"],
+    files: ["ui/**/*.{ts,tsx}"],
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,

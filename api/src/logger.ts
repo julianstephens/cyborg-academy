@@ -3,7 +3,7 @@ import winston from "winston";
 const options = {
   file: {
     level: "debug",
-    filename: `backend-${Date.now()}.log`,
+    filename: `api-${Date.now()}.log`,
     handleExceptions: true,
     format: winston.format.combine(
       winston.format.splat(),

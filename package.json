@@ -8,7 +8,8 @@
     "fmt": "prettier ./**/**/*.{js,ts,tsx} --write",
     "lint": "eslint",
     "prepare": "husky",
-    "dev": "pnpm --parallel --stream --filter frontend --filter backend dev"
+    "dev": "pnpm --parallel --stream --filter ui --filter api dev",
+    "build": "pnpm --parallel --stream --filter ui --filter api build"
   },
   "keywords": [],
   "author": "",
