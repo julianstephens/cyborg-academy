@@ -19,12 +19,17 @@ import morgan from "morgan";
 
 const app = express();
 const pgSession = pgSimple(session);
-const port = 8080;
+
+logger.info(env.ALLOWED_ORIGINS);
 
 app.use(morgan("combined"));
-app.use(helmet());
-app.use(hpp());
-app.use(cors());
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+    },
+  }),
+);
 app.use(
   bodyParser.urlencoded({
     extended: true,
@@ -33,11 +38,21 @@ app.use(
 app.use(bodyParser.text());
 app.use(bodyParser.json());
 app.use(
+  cors({
+    exposedHeaders: "x-location",
+    origin: env.ALLOWED_ORIGINS,
+    credentials: true,
+  }),
+);
+app.use(hpp());
+app.use(
   session({
     secret: env.AUTH_SECRET,
     resave: false,
+    saveUninitialized: false,
     cookie: {
       httpOnly: false,
+      sameSite: true,
       secure: process.env.NODE_ENV === "production",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
     },
@@ -45,14 +60,6 @@ app.use(
   }),
 );
 app.use(csurf());
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", req.headers.origin);
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept",
-  );
-  next();
-});
 
 app.get(env.API_PREFIX, (req, res) => {
   res.json({
@@ -68,6 +75,8 @@ app.use(notFound);
 app.use(errorLogger);
 app.use(errorHandler);
 
-app.listen(port, () => {
-  logger.info(`server listening at: http://localhost:${port}`);
+app.listen(env.PORT, () => {
+  logger.info(`server listening at: ${env.BASE_URL}`);
 });
+
+export default app;

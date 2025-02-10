@@ -1,7 +1,6 @@
 /* eslint @typescript-eslint/no-unused-vars: 1 */
-import { env } from "@/env";
 import logger from "@/logger";
-import { getUser, IDError } from "@/utils";
+import { doLogout, getUser, IDError } from "@/utils";
 import { apiErrorSchema, type APIError } from "cyborg-utils";
 import type { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
@@ -69,15 +68,11 @@ export const authGuard = async (
       req.session.user = currUser;
       return next();
     } catch {
-      req.session.destroy((err) => {
-        res.redirect(`${env.APP_URL}`);
-      });
+      doLogout(req, res);
     }
   }
 
-  req.session.destroy((err) => {
-    res.redirect(`${env.APP_URL}`);
-  });
+  doLogout(req, res);
 };
 
 export const validateBody = (schema: z.ZodType<unknown>) => {

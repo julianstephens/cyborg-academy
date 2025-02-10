@@ -36,7 +36,8 @@ class OauthService {
     url.searchParams.append("scope", scope);
     url.searchParams.append("client_id", clientId);
     url.searchParams.append("client_secret", clientSecret);
-    res.redirect(url.toString());
+    res.set("x-location", url.toString());
+    res.sendStatus(StatusCodes.NO_CONTENT);
   }
 
   async exchange(req: Request, res: Response) {

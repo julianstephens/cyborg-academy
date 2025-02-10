@@ -1,6 +1,6 @@
-import { env } from "@/env";
 import { authGuard } from "@/middleware";
 import { OauthService } from "@/services";
+import { doLogout } from "@/utils";
 import type { ResponseObject, User } from "cyborg-utils";
 import { Router, type Request, type Response } from "express";
 
@@ -17,11 +17,7 @@ router.get("/me", authGuard, (req: Request, res: Response) => {
   res.json(data);
 });
 router.get("/logout", async (req: Request, res: Response) => {
-  req.session.destroy((err) => {
-    if (err) throw err;
-    res.clearCookie("connect.sid");
-    res.redirect(env.APP_URL);
-  });
+  doLogout(req, res);
 });
 
 export default router;
