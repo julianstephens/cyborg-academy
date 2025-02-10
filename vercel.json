@@ -6,7 +6,7 @@
   },
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "https://cyborg-academy-ui.vercel.app/(.*)",
       "destination": "/api"
     },
     {
