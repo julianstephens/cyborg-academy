@@ -2,12 +2,8 @@
   "trailingSlash": true,
   "rewrites": [
     {
-      "source": "https://cyborg-academy-api.vercel.app/api/v1/:match*",
-      "destination": "/index.cjs/:match*"
-    },
-    {
-      "source": "/api/(.*)",
-      "destination": "https://cyborg-academy-api.vercel.app/"
+      "source": "/api/:path*",
+      "destination": "https://cyborg-academy-api.vercel.app/:path*"
     },
     {
       "source": "/",
