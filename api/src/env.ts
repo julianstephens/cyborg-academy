@@ -7,7 +7,6 @@ export const env = createEnv({
       .string()
       .transform((value) => value.split(","))
       .pipe(z.string().array()),
-    API_PREFIX: z.string(),
     APP_URL: z.string().url().default("http://localhost:5173"),
     AUTH_SECRET: z.string(),
     AUTH_DISCORD_ID: z.string(),

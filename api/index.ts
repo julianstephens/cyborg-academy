@@ -61,15 +61,15 @@ app.use(
 );
 app.use(csurf());
 
-app.get(env.API_PREFIX, (req, res) => {
+app.get("/", (_, res) => {
   res.json({
     status: StatusCodes.OK,
     message: "healthy",
   });
 });
-app.use(`${env.API_PREFIX}/auth`, authRouter);
-app.use(`${env.API_PREFIX}/seminars`, seminarRouter);
-app.use(`${env.API_PREFIX}/sessions`, sessionRouter);
+app.use("/auth", authRouter);
+app.use("/seminars", seminarRouter);
+app.use("/sessions", sessionRouter);
 
 app.use(notFound);
 app.use(errorLogger);

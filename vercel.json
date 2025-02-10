@@ -5,7 +5,12 @@
       "maxDuration": 10
     }
   },
+  "trailingSlash": true,
   "rewrites": [
+    {
+      "source": "",
+      "destination": ""
+    },
     {
       "source": "/api/(.*)",
       "destination": "https://cyborg-academy-api.vercel.app/api/v1"

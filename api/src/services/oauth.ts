@@ -10,7 +10,7 @@ class OauthService {
   static getConfig() {
     const clientId = env.AUTH_DISCORD_ID;
     const clientSecret = env.AUTH_DISCORD_SECRET;
-    const tokenURL = "https://discord.com/api/v10/oauth2/token";
+    const tokenURL = `${env.DISCORD_API_URL}oauth2/token`;
     const authorizationURL = "https://discord.com/oauth2/authorize";
     const scope = "identify email guilds";
 
@@ -31,7 +31,7 @@ class OauthService {
     url.searchParams.append("response_type", "code");
     url.searchParams.append(
       "redirect_url",
-      `${env.BASE_URL}${env.API_PREFIX}/auth/discord/callback`,
+      `${env.BASE_URL}/auth/discord/callback`,
     );
     url.searchParams.append("scope", scope);
     url.searchParams.append("client_id", clientId);
