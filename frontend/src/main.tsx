@@ -1,4 +1,4 @@
-import { AuthProvider } from "@/components/AuthContext.tsx";
+import { AuthProvider } from "@/components/AuthProvider.tsx";
 import { Provider } from "@/components/ui/provider";
 import AppRoutes from "@/routes.tsx";
 import { Box } from "@chakra-ui/react";
