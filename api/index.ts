@@ -75,8 +75,10 @@ app.use(notFound);
 app.use(errorLogger);
 app.use(errorHandler);
 
-app.listen(env.PORT, () => {
-  logger.info(`server listening at: ${env.BASE_URL}`);
-});
+if (process.env.NODE_ENV && process.env.NODE_ENV in ["dev", "development"]) {
+  app.listen(env.PORT, () => {
+    logger.info(`server listening at: ${env.BASE_URL}`);
+  });
+}
 
 export default app;
