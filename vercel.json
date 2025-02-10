@@ -1,12 +1,16 @@
 {
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "https://cyborg-academy-backend.vercel.app"
+      "source": "/api/:path",
+      "destination": "https://cyborg-academy-backend.vercel.app/api/v1/:path"
     },
     {
-      "source": "/(.*)",
-      "destination": "https://cyborg-academy-ui.vercel.app"
+      "source": "/",
+      "destination": "https://cyborg-academy-ui.vercel.app/"
+    },
+    {
+      "source": "/:path*",
+      "destination": "https://cyborg-academy-ui.vercel.app/:path*"
     }
   ]
 }
