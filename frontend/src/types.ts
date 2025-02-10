@@ -17,7 +17,6 @@ export interface AuthProps extends Partial<UserProp> {
 }
 
 export interface AppInfo {
-  apiUrl: string;
   appName: string;
   appDescription: string;
 }

@@ -1,24 +1,23 @@
-import { AuthContext, useAppInfo } from "@/hooks";
+import { AuthContext } from "@/hooks";
 import { ChildrenProps } from "@/types";
 import { ResponseObject, User } from "cyborg-utils";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 export const AuthProvider = ({ children }: ChildrenProps) => {
-  const { apiUrl } = useAppInfo();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [checkedAuthStatus, setCheckedAuthStatus] = useState(false);
   const [user, setUser] = useState<User | undefined>();
   const goto = useNavigate();
 
   const login = async () => {
-    const res = await fetch(`${apiUrl}/auth/discord`);
+    const res = await fetch("api/auth/discord");
     const loc = res.headers.get("x-location");
     if (loc) window.location.replace(loc);
   };
 
   const logout = () => {
-    fetch(`${apiUrl}/auth/logout`)
+    fetch("api/auth/logout")
       .then(() => {
         setUser(undefined);
         goto("/");
@@ -28,7 +27,7 @@ export const AuthProvider = ({ children }: ChildrenProps) => {
 
   const checkAuthStatus = async () => {
     try {
-      const res = await fetch(`${apiUrl}/auth/me`);
+      const res = await fetch("api/auth/me");
       const data: ResponseObject<User> = await res.json();
       if (data && data.data) {
         setUser(data.data);
