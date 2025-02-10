@@ -6,9 +6,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "DEBUG=express:* tsx --env-file=../.env --watch ./src/index.ts",
-    "start": "tsx ./src/index.ts",
+    "start": "tsx ./index.ts",
     "build": "tsup",
-    "migrate": "tsx ./upgrade-db.ts",
+    "migrate": "tsx ./scripts/upgrade-db.ts",
     "new": "tsx ./scripts/create-migration.ts",
     "seed": "tsx ./scripts/seed-db.ts",
     "seminar": "tsx ./scripts/create-seminar.ts",

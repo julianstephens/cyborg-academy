@@ -8,7 +8,8 @@
     "fmt": "prettier ./**/**/*.{js,ts,tsx} --write",
     "lint": "eslint",
     "dev": "pnpm --parallel --stream --filter ui --filter api dev",
-    "build": "pnpm --parallel --stream --filter ui --filter api build"
+    "build": "pnpm --parallel --stream --filter ui --filter api build",
+    "preinstall": "husky"
   },
   "keywords": [],
   "author": "",
@@ -24,6 +25,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^15.4.3",
     "prettier": "^3.4.2",
-    "ts-standard": "^12.0.2"
+    "ts-standard": "^12.0.2",
+    "typescript-eslint": "^8.24.0"
   }
 }
