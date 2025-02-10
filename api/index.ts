@@ -17,7 +17,7 @@ import hpp from "hpp";
 import { StatusCodes } from "http-status-codes";
 import morgan from "morgan";
 
-const app = express();
+export const app = express();
 const pgSession = pgSimple(session);
 
 logger.info(env.ALLOWED_ORIGINS);
@@ -78,5 +78,3 @@ app.use(errorHandler);
 app.listen(env.PORT, () => {
   logger.info(`server listening on port: ${env.PORT}`);
 });
-
-export default app;
