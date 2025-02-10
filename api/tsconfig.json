@@ -1,5 +1,5 @@
 {
-  "extends": "./node_modules/@tsconfig/node22/tsconfig.json",
+  "extends": "@tsconfig/node22/tsconfig.json",
   "compilerOptions": {
     "moduleDetection": "force",
     "module": "esnext",
@@ -9,6 +9,13 @@
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "isolatedModules": true
-  }
+    "isolatedModules": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "cyborg-utils/*": ["../cyborg-utils/src/*"]
+    }
+  },
+  "exclude": ["dist"],
+  "references": [{ "path": "../cyborg-utils" }]
 }
