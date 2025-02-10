@@ -75,7 +75,10 @@ app.use(notFound);
 app.use(errorLogger);
 app.use(errorHandler);
 
-if (process.env.NODE_ENV && process.env.NODE_ENV in ["dev", "development"]) {
+if (
+  process.env.NODE_ENV &&
+  ["dev", "development"].includes(process.env.NODE_ENV)
+) {
   app.listen(env.PORT, () => {
     logger.info(`server listening at: ${env.BASE_URL}`);
   });
