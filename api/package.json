@@ -7,7 +7,6 @@
   "scripts": {
     "dev": "DEBUG=express:* tsx --env-file=../.env --watch ./index.ts",
     "start": "tsx ./index.ts",
-    "build": "tsup",
     "migrate": "tsx ./scripts/upgrade-db.ts",
     "new": "tsx ./scripts/create-migration.ts",
     "seed": "tsx ./scripts/seed-db.ts",
@@ -38,7 +37,6 @@
     "@types/pg": "^8.11.11",
     "csurf": "^1.11.0",
     "minimist": "^1.2.8",
-    "tsup": "^8.3.6",
     "typescript": "~5.6.3"
   },
   "dependencies": {

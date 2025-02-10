@@ -1,4 +1,4 @@
 packages:
-  - "ui/*"
-  - "api/*"
-  - "cyborg-utils/*"
+  - "ui"
+  - "api"
+  - "cyborg-utils"

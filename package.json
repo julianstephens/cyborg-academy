@@ -6,6 +6,7 @@
   "main": "index.js",
   "scripts": {
     "fmt": "prettier ./**/**/*.{js,ts,tsx} --write",
+    "clean": "rimraf --glob ./**/node_modules",
     "lint": "eslint",
     "dev": "pnpm --parallel --stream --filter ui --filter api dev",
     "build": "pnpm --parallel --stream --filter ui --filter api build",
