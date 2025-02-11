@@ -7,11 +7,11 @@ export const env = createEnv({
       .string()
       .transform((value) => value.split(","))
       .pipe(z.string().array()),
-    APP_URL: z.string().url().default("http://localhost:5173"),
+    APP_URL: z.string().url(),
     AUTH_SECRET: z.string(),
     AUTH_DISCORD_ID: z.string(),
     AUTH_DISCORD_SECRET: z.string(),
-    BASE_URL: z.string().url().default("http://localhost:3000"),
+    BASE_URL: z.string().url(),
     DB_URL: z.string().url(),
     DISCORD_API_URL: z.string().url(),
     DISCORD_GUILD_ID: z.string(),

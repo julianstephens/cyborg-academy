@@ -1,6 +1,6 @@
 import { env } from "@/env";
-import type { Request, Response } from "express";
 import type { APIError, User } from "cyborg-utils";
+import type { Request, Response } from "express";
 import got from "got";
 import { StatusCodes } from "http-status-codes";
 
@@ -39,7 +39,8 @@ export class IDError extends Error {
 export const doLogout = (req: Request, res: Response) => {
   req.session.destroy((err) => {
     if (err) throw err;
-    res.clearCookie("connect.sid");
-    res.redirect(env.APP_URL);
+    if (req.cookies && req.cookies["connect.sid"]) {
+      res.clearCookie("connect.sid");
+    }
   });
 };

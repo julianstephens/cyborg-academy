@@ -9,7 +9,7 @@ export const useSeminars = createQuery<
   null,
   APIError
 >({
-  queryKey: ["/api/seminars"],
+  queryKey: [`${import.meta.env.VITE_API_URL}/seminars`],
   fetcher: handlers.getSeminars,
 });
 
@@ -18,7 +18,7 @@ export const useSeminar = createQuery<
   { slug: string },
   APIError
 >({
-  queryKey: ["/api/seminars"],
+  queryKey: [`${import.meta.env.VITE_API_URL}/seminars`],
   fetcher: handlers.getSeminar,
 });
 

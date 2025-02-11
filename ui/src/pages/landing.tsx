@@ -48,7 +48,7 @@ const LandingPage = () => {
         <meta name="description" content={appDescription} />
       </Helmet>
       <Heading size="3xl">{appName}</Heading>
-      <Button w="md" onClick={doLogin}>
+      <Button w={{ base: "xs", lg: "md" }} onClick={doLogin}>
         Login
       </Button>
     </Flex>

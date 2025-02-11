@@ -12,13 +12,13 @@ export const AuthProvider = ({ children }: ChildrenProps) => {
   const goto = useNavigate();
 
   const login = async () => {
-    const res = await fetch("/api/auth/discord");
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/discord`);
     const loc = res.headers.get("x-location");
     if (loc) window.location.replace(loc);
   };
 
   const logout = () => {
-    fetch("api/auth/logout")
+    fetch(`${import.meta.env.VITE_API_URL}/auth/logout`)
       .then(() => {
         setUser(undefined);
         goto("/");

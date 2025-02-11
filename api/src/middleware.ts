@@ -73,6 +73,10 @@ export const authGuard = async (
   }
 
   doLogout(req, res);
+  next({
+    status: StatusCodes.UNAUTHORIZED,
+    message: "user is not authenticated",
+  } as APIError);
 };
 
 export const validateBody = (schema: z.ZodType<unknown>) => {
@@ -88,4 +92,24 @@ export const validateBody = (schema: z.ZodType<unknown>) => {
       } as APIError);
     }
   };
+};
+
+export const corsHeaders = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "*");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Credential, Accept",
+  );
+
+  if (req.method === "OPTIONS") {
+    res.status(200).end();
+  } else {
+    next();
+  }
 };

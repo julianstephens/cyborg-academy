@@ -3,6 +3,7 @@ import { OauthService } from "@/services";
 import { doLogout } from "@/utils";
 import type { ResponseObject, User } from "cyborg-utils";
 import { Router, type Request, type Response } from "express";
+import { StatusCodes } from "http-status-codes";
 
 const router = Router();
 
@@ -18,6 +19,7 @@ router.get("/me", authGuard, (req: Request, res: Response) => {
 });
 router.get("/logout", async (req: Request, res: Response) => {
   doLogout(req, res);
+  res.sendStatus(StatusCodes.NO_CONTENT);
 });
 
 export default router;

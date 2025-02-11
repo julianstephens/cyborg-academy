@@ -1,13 +1,17 @@
 import { pgPool } from "@/db";
 import { env } from "@/env.js";
 import logger from "@/logger.js";
-import { errorHandler, errorLogger, notFound } from "@/middleware.js";
+import {
+  corsHeaders,
+  errorHandler,
+  errorLogger,
+  notFound,
+} from "@/middleware.js";
 import authRouter from "@/routes/auth.js";
 import seminarRouter from "@/routes/seminar";
 import sessionRouter from "@/routes/seminarSession";
 import bodyParser from "body-parser";
 import pgSimple from "connect-pg-simple";
-import cors from "cors";
 import csurf from "csurf";
 import "dotenv/config";
 import express from "express";
@@ -21,8 +25,8 @@ import morgan from "morgan";
 const app = express();
 const pgSession = pgSimple(session);
 
-logger.info(env.ALLOWED_ORIGINS);
-
+app.use(corsHeaders);
+app.options("*", corsHeaders);
 app.use(morgan("combined"));
 app.use(
   helmet.contentSecurityPolicy({
@@ -38,13 +42,7 @@ app.use(
 );
 app.use(bodyParser.text());
 app.use(bodyParser.json());
-app.use(
-  cors({
-    exposedHeaders: "x-location",
-    origin: env.ALLOWED_ORIGINS,
-    credentials: true,
-  }),
-);
+
 app.use(hpp());
 app.use(
   session({

@@ -1,0 +1,15 @@
+app = "cyborg-academy-ui"
+
+[build]
+build-target = "ui"
+
+[build.args]
+VITE_API_URL = "https://cyborg-academy-api.fly.dev"
+
+[http_service]
+internal_port = 80
+force_https = true
+
+[[statics]]
+guest_path = "/usr/share/nginx/html/"
+url_prefix = "/"

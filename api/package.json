@@ -5,7 +5,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "DEBUG=express:* tsx --env-file=../.env --watch ./index.ts",
+    "dev": "DEBUG=express:* tsx --watch ./index.ts",
     "start": "NODE_ENV=production node ./dist/index.js",
     "build": "tsup",
     "migrate": "tsx ./scripts/upgrade-db.ts",
