@@ -24,10 +24,11 @@ export const Header = ({ user }: UserProp) => {
     <Flex w="full" mb="12" justify="space-between">
       <Link to="/">
         <Heading
-          size="3xl"
+          size={{ base: "xl", lg: "3xl" }}
           _hover={{
             // color: "#EFCB68",
-            textDecoration: "underline",
+            color: "blue.200",
+            textDecorationColor: "blue.200",
             transition: "ease",
             transitionDuration: "moderate",
           }}
@@ -36,19 +37,19 @@ export const Header = ({ user }: UserProp) => {
         </Heading>
       </Link>
       {user && (
-        <MenuRoot>
+        <MenuRoot positioning={{ placement: "bottom-end" }}>
           <MenuTrigger cursor="pointer" asChild>
             <Button variant="plain" border="none" outline="none">
               <Avatar
-                size="xl"
+                size="2xl"
                 name={user.username}
                 colorPalette={pickPalette(user.username ?? "test")}
                 src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}`}
               />
             </Button>
           </MenuTrigger>
-          <MenuContent>
-            <MenuItem value="logout" onClick={logout}>
+          <MenuContent mt="4">
+            <MenuItem fontSize="xl" value="logout" onClick={logout}>
               Logout
             </MenuItem>
           </MenuContent>

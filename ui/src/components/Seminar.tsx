@@ -13,10 +13,29 @@ import { Link } from "react-router";
 
 export const SeminarDisplay = ({ data }: { data: Seminar }) => {
   return (
-    <Collapsible.Root w="3/4" border="1px solid white" borderRadius="lg" px="4">
-      <Collapsible.Trigger w="full" h="14" cursor="pointer" asChild>
+    <Collapsible.Root
+      w={{ base: "full", lg: "3/4" }}
+      border="1px solid white"
+      borderRadius="lg"
+      px="4"
+    >
+      <Collapsible.Trigger
+        fontSize={{ base: "xl", lg: "3xl" }}
+        w="full"
+        h="14"
+        cursor="pointer"
+        asChild
+      >
         <Flex justify="space-between" align="center">
-          <ChakraLink variant="underline" asChild>
+          <ChakraLink
+            variant="underline"
+            transition="ease"
+            transitionDuration="moderate"
+            _hover={{ textDecorationColor: "blue.200", color: "blue.200" }}
+            _disabled={{ pointerEvents: "none", textDecoration: "none" }}
+            asChild
+            aria-disabled="true"
+          >
             <Link to={`/dashboard/${data.slug}`} state={data}>
               <Text>{data.title}</Text>
             </Link>
@@ -24,7 +43,7 @@ export const SeminarDisplay = ({ data }: { data: Seminar }) => {
           <FaAngleDown />
         </Flex>
       </Collapsible.Trigger>
-      <Collapsible.Content pb="4">
+      <Collapsible.Content fontSize={{ base: "lg", lg: "2xl" }} pb="4">
         {data.description && <Text mb="4">{data.description}</Text>}
         <hr />
         <Show

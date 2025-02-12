@@ -12,13 +12,17 @@ export const AuthProvider = ({ children }: ChildrenProps) => {
   const goto = useNavigate();
 
   const login = async () => {
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/discord`);
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/discord`, {
+      credentials: "include",
+    });
     const loc = res.headers.get("x-location");
     if (loc) window.location.replace(loc);
   };
 
   const logout = () => {
-    fetch(`${import.meta.env.VITE_API_URL}/auth/logout`)
+    fetch(`${import.meta.env.VITE_API_URL}/auth/logout`, {
+      credentials: "include",
+    })
       .then(() => {
         setUser(undefined);
         goto("/");
@@ -34,15 +38,19 @@ export const AuthProvider = ({ children }: ChildrenProps) => {
         setIsAuthenticated(true);
       } else {
         setIsAuthenticated(false);
+        goto("/");
       }
     } catch {
       setIsAuthenticated(false);
+      goto("/");
     }
     setCheckedAuthStatus(true);
   };
 
   useEffect(() => {
-    checkAuthStatus();
+    if (!user) {
+      checkAuthStatus();
+    }
   }, [user, isAuthenticated]);
 
   return (
