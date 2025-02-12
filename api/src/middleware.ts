@@ -1,4 +1,5 @@
 /* eslint @typescript-eslint/no-unused-vars: 1 */
+import { env } from "@/env";
 import logger from "@/logger";
 import { doLogout, getUser, IDError } from "@/utils";
 import { apiErrorSchema, type APIError } from "cyborg-utils";
@@ -62,21 +63,23 @@ export const authGuard = async (
   res: Response,
   next: NextFunction,
 ) => {
-  if (req.session.accessToken) {
-    try {
-      const currUser = await getUser(req.session.accessToken);
-      req.session.user = currUser;
-      return next();
-    } catch {
-      doLogout(req, res);
+  req.session.reload(async (err) => {
+    if (req.session.accessToken) {
+      try {
+        const currUser = await getUser(req.session.accessToken);
+        req.session.user = currUser;
+        return next();
+      } catch {
+        doLogout(req, res);
+      }
     }
-  }
 
-  doLogout(req, res);
-  next({
-    status: StatusCodes.UNAUTHORIZED,
-    message: "user is not authenticated",
-  } as APIError);
+    doLogout(req, res);
+    next({
+      status: StatusCodes.UNAUTHORIZED,
+      message: "user is not authenticated",
+    } as APIError);
+  });
 };
 
 export const validateBody = (schema: z.ZodType<unknown>) => {
@@ -99,9 +102,18 @@ export const corsHeaders = (
   res: Response,
   next: NextFunction,
 ) => {
-  res.header("Access-Control-Allow-Origin", "*");
+  if (
+    req.headers.origin &&
+    env.ALLOWED_ORIGINS.indexOf(req.headers.origin) !== -1
+  ) {
+    res.header("Access-Control-Allow-Origin", req.headers.origin);
+  } else {
+    res.header("Access-Control-Allow-Origin", "*");
+  }
+
   res.header("Access-Control-Allow-Methods", "*");
   res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Expose-Headers", "X-Location");
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Credential, Accept",

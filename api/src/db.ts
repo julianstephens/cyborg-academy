@@ -1,12 +1,25 @@
+import { Kysely, PostgresDialect } from "kysely";
 import pg from "pg";
 import { env } from "./env";
-import { Kysely, PostgresDialect } from "kysely";
+import logger from "./logger";
 import { Database } from "./models";
 
 export const pgPool = new pg.Pool({
   connectionString: env.DB_URL,
   max: 10,
 });
+
+async function checkDatabaseConnection() {
+  try {
+    await pgPool.query("SELECT 1");
+    logger.info("database connection healthy");
+  } catch (error) {
+    logger.error("database connection check failed:", error);
+    throw error;
+  }
+}
+
+await checkDatabaseConnection();
 
 const dialect = new PostgresDialect({ pool: pgPool });
 

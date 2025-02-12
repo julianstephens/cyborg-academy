@@ -2,7 +2,7 @@ import { env } from "@/env";
 import { Guild, TokenResponse } from "@/types";
 import { getUser } from "@/utils";
 import { isAPIError, type APIError } from "cyborg-utils";
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import got from "got";
 import { StatusCodes } from "http-status-codes";
 
@@ -10,7 +10,7 @@ class OauthService {
   static getConfig() {
     const clientId = env.AUTH_DISCORD_ID;
     const clientSecret = env.AUTH_DISCORD_SECRET;
-    const tokenURL = `${env.DISCORD_API_URL}oauth2/token`;
+    const tokenURL = `${env.DISCORD_API_URL}/oauth2/token`;
     const authorizationURL = "https://discord.com/oauth2/authorize";
     const scope = "identify email guilds";
 
@@ -40,12 +40,12 @@ class OauthService {
     res.sendStatus(StatusCodes.NO_CONTENT);
   }
 
-  async exchange(req: Request, res: Response) {
+  async exchange(req: Request, res: Response, next: NextFunction) {
     if (!("code" in req.query)) {
-      throw {
+      return next({
         status: StatusCodes.BAD_REQUEST,
         message: "no authorization code provided",
-      } as APIError;
+      } as APIError);
     }
 
     const { tokenURL, clientId, clientSecret } = OauthService.getConfig();
@@ -57,50 +57,57 @@ class OauthService {
     };
 
     try {
-      const r = await got
-        .post(tokenURL, {
-          form: data,
-          username: clientId,
-          password: clientSecret,
-        })
-        .json<TokenResponse>();
+      const r = got.post(tokenURL, {
+        form: data,
+        username: clientId,
+        password: clientSecret,
+      });
 
-      const currUser = await getUser(r.access_token);
+      const tokenRes = await r.json<TokenResponse>();
+
+      const currUser = await getUser(tokenRes.access_token);
 
       const guildRes = await got
         .get(`${env.DISCORD_API_URL}/users/@me/guilds`, {
-          headers: { Authorization: `Bearer ${r.access_token}` },
+          headers: { Authorization: `Bearer ${tokenRes.access_token}` },
         })
         .json<Guild[]>();
 
       if (guildRes.length === 0) {
-        throw {
+        return next({
           status: StatusCodes.FORBIDDEN,
           message: "user does not belong to the correct guild",
-        } as APIError;
+        } as APIError);
       }
 
       const isGuildMember = guildRes.some((g) => g.id === env.DISCORD_GUILD_ID);
 
       if (!isGuildMember) {
-        throw {
+        return next({
           status: StatusCodes.FORBIDDEN,
           message: "user does not belong to the correct guild",
-        } as APIError;
+        } as APIError);
       }
 
-      req.session.user = currUser;
-      req.session.accessToken = r.access_token;
-      req.session.refreshToken = r.refresh_token;
-      res.redirect(`${env.APP_URL}/dashboard`);
+      req.session.regenerate((err) => {
+        if (err) return res.redirect(env.APP_URL);
+        req.session.user = currUser;
+        req.session.accessToken = tokenRes.access_token;
+        req.session.refreshToken = tokenRes.refresh_token;
+        req.session.save((err) => {
+          let redirectUrl = env.APP_URL;
+          if (!err) redirectUrl += "/dashboard";
+          res.redirect(redirectUrl);
+        });
+      });
     } catch (err: unknown) {
-      if (isAPIError(err)) throw err;
+      if (isAPIError(err)) return next(err);
 
-      throw {
+      return next({
         status: StatusCodes.UNAUTHORIZED,
         message: "unable to authenticate user",
         detail: err,
-      } as APIError;
+      } as APIError);
     }
   }
 }

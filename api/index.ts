@@ -26,7 +26,7 @@ const app = express();
 const pgSession = pgSimple(session);
 
 app.use(corsHeaders);
-app.options("*", corsHeaders);
+app.all("*", corsHeaders);
 app.use(morgan("combined"));
 app.use(
   helmet.contentSecurityPolicy({
@@ -50,12 +50,12 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      httpOnly: false,
-      sameSite: true,
+      httpOnly: true,
+      sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
     },
-    store: new pgSession({ pool: pgPool }),
+    store: new pgSession({ pool: pgPool, errorLog: logger.error }),
   }),
 );
 app.use(csurf());
