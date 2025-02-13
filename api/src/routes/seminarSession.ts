@@ -3,12 +3,11 @@ import { SeminarSessionService } from "@/services";
 import { IDError } from "@/utils";
 import {
   newSeminarSessionSchema,
+  seminarSessionUpdateSchema,
   type ResponseObject,
   type SeminarSession,
-  seminarSessionUpdateSchema,
 } from "cyborg-utils";
-import type { Request, Response } from "express";
-import { Router } from "express";
+import { Router, type Request, type Response } from "express";
 
 const router = Router();
 router.use(authGuard);

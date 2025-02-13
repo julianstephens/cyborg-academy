@@ -1,8 +1,8 @@
+import { env } from "@/env";
+import logger from "@/logger";
+import { Database } from "@/models";
 import { Kysely, PostgresDialect } from "kysely";
 import pg from "pg";
-import { env } from "./env";
-import logger from "./logger";
-import { Database } from "./models";
 
 export const pgPool = new pg.Pool({
   connectionString: env.DB_URL,

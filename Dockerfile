@@ -28,7 +28,8 @@ EXPOSE 80
 CMD [ "nginx", "-g", "daemon off;" ]
 
 FROM nginx:alpine AS ui
-COPY --from=build /prod/ui /usr/share/nginx/html
 COPY nginx/nginx.prod.conf /etc/nginx/nginx.conf
+COPY nginx/default.prod.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /prod/ui /usr/share/nginx/html
 EXPOSE 80
 CMD [ "nginx", "-g", "daemon off;" ]

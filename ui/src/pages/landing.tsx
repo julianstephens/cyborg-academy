@@ -2,12 +2,13 @@ import { useAppInfo, useAuth } from "@/hooks";
 import { Button, Flex, Heading } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { toast } from "react-toastify";
 
 const LandingPage = () => {
   const { appName, appDescription } = useAppInfo();
   const [title, setTitle] = useState("");
+  const [searchParams] = useSearchParams();
   const { isAuthenticated, checkedAuthStatus, login } = useAuth();
   const goto = useNavigate();
 
@@ -33,6 +34,13 @@ const LandingPage = () => {
   useEffect(() => {
     document.title = title;
   }, [title]);
+
+  useEffect(() => {
+    const err = searchParams.get("error");
+    if (err) {
+      toast.error(err, { toastId: "serverErr" });
+    }
+  }, []);
 
   return (
     <Flex

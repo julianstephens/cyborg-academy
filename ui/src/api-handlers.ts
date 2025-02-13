@@ -1,6 +1,7 @@
 import type { APIError, ResponseObject, Seminar, User } from "cyborg-utils";
 
 const opts: RequestInit = { credentials: "include" };
+
 export const getAuthMe = async (): Promise<ResponseObject<User>> => {
   const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/me`, opts);
   return res.json();

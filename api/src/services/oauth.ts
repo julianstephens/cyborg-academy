@@ -1,8 +1,8 @@
 import { env } from "@/env";
 import { Guild, TokenResponse } from "@/types";
 import { getUser } from "@/utils";
-import { isAPIError, type APIError } from "cyborg-utils";
-import type { NextFunction, Request, Response } from "express";
+import { isAPIError } from "cyborg-utils";
+import type { Request, Response } from "express";
 import got from "got";
 import { StatusCodes } from "http-status-codes";
 
@@ -40,12 +40,14 @@ class OauthService {
     res.sendStatus(StatusCodes.NO_CONTENT);
   }
 
-  async exchange(req: Request, res: Response, next: NextFunction) {
+  async exchange(req: Request, res: Response) {
+    const url = new URL(env.APP_URL);
     if (!("code" in req.query)) {
-      return next({
-        status: StatusCodes.BAD_REQUEST,
-        message: "no authorization code provided",
-      } as APIError);
+      url.searchParams.append(
+        "error",
+        "Something went wrong with Discord authorization",
+      );
+      return res.redirect(url.toString());
     }
 
     const { tokenURL, clientId, clientSecret } = OauthService.getConfig();
@@ -74,23 +76,24 @@ class OauthService {
         .json<Guild[]>();
 
       if (guildRes.length === 0) {
-        return next({
-          status: StatusCodes.FORBIDDEN,
-          message: "user does not belong to the correct guild",
-        } as APIError);
+        return res.redirect(env.APP_URL);
       }
 
       const isGuildMember = guildRes.some((g) => g.id === env.DISCORD_GUILD_ID);
 
       if (!isGuildMember) {
-        return next({
-          status: StatusCodes.FORBIDDEN,
-          message: "user does not belong to the correct guild",
-        } as APIError);
+        url.searchParams.append(
+          "error",
+          "User does not belong to the correct guild",
+        );
+        return res.redirect(url.toString());
       }
 
       req.session.regenerate((err) => {
-        if (err) return res.redirect(env.APP_URL);
+        if (err) {
+          url.searchParams.append("error", "Unable to create user session");
+          return res.redirect(url.toString());
+        }
         req.session.user = currUser;
         req.session.accessToken = tokenRes.access_token;
         req.session.refreshToken = tokenRes.refresh_token;
@@ -101,13 +104,13 @@ class OauthService {
         });
       });
     } catch (err: unknown) {
-      if (isAPIError(err)) return next(err);
+      if (isAPIError(err)) {
+        url.searchParams.append("error", err.message);
+        return res.redirect(url.toString());
+      }
 
-      return next({
-        status: StatusCodes.UNAUTHORIZED,
-        message: "unable to authenticate user",
-        detail: err,
-      } as APIError);
+      url.searchParams.append("error", "Unable to authenticate user");
+      return res.redirect(url.toString());
     }
   }
 }

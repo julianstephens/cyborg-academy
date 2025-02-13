@@ -44,6 +44,7 @@ app.use(bodyParser.text());
 app.use(bodyParser.json());
 
 app.use(hpp());
+if (process.env.NODE_ENV === "production") app.set("trust proxy", 1);
 app.use(
   session({
     secret: env.AUTH_SECRET,
@@ -51,7 +52,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: "none",
       secure: process.env.NODE_ENV === "production",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
     },
