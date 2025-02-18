@@ -17,6 +17,8 @@ const seminarSVC = new SeminarService();
 router.get("/", async (req: Request, res: Response) => {
   const filters: Partial<Seminar> = {};
   if (req.query.title) filters.title = req.query.title as string;
+  if (req.query.draft)
+    filters.draft = (req.query.draft as string).toLowerCase() === "true";
   if (req.query.createdAt)
     filters.createdAt = parseInt(req.query.createdAt as string);
   if (req.query.updatedAt)

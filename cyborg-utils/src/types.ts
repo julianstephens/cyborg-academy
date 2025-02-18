@@ -24,6 +24,7 @@ export interface Seminar {
   inProgress: boolean;
   completed: boolean;
   sessions?: SeminarSession[];
+  draft: boolean;
   createdAt: number;
   updatedAt: number;
 }
@@ -35,10 +36,16 @@ export interface SeminarSession {
   description: string;
   locked: boolean;
   order: number;
-  readings?: string[];
-  notes?: string[];
+  readings?: RemoteResource[];
+  notes?: RemoteResource[];
+  draft: boolean;
   createdAt: number;
   updatedAt: number;
+}
+
+export interface RemoteResource {
+  name: string;
+  url: string;
 }
 
 export interface ResponseWithMessage {

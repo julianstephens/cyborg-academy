@@ -12,6 +12,7 @@ const main = async () => {
     console.log("  -d, --description        optional seminar description");
     console.log("  -p, --in-progress        marks the seminar as in progress");
     console.log("  -c, --completed          marks the seminar as completed");
+    console.log("  --public                 marks the seminar as not drafted");
     console.log("  -h, --help               print usage instructions");
     return;
   }
@@ -29,17 +30,20 @@ const main = async () => {
 
   let completed = false;
   let inProgress = false;
+  let draft = true;
   let description = undefined;
 
   if (argv.d) description = argv.d;
   if (argv.description) description = argv.description;
   if (argv.c || argv.completed) completed = true;
   if (argv.p || argv["in-progress"]) inProgress = true;
+  if (argv.public) draft = false;
 
   await seminarSVC.create({
     title,
     completed,
     inProgress,
+    draft,
     description,
   });
 

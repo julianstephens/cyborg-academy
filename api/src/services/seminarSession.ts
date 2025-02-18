@@ -9,7 +9,7 @@ class SeminarSessionService {
     return await repo.findSeminarSessionById(id);
   };
 
-  list = async (filters: Partial<SeminarSession> = {}) => {
+  list = async (filters: Partial<SeminarSession> = { draft: false }) => {
     return await repo.findSeminarSessions(filters);
   };
 

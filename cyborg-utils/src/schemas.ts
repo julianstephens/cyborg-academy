@@ -23,6 +23,7 @@ export const newSeminarSchema = z.object({
   description: z.string().optional(),
   inProgress: z.boolean(),
   completed: z.boolean(),
+  draft: z.boolean().default(true),
 });
 
 export const seminarUpdateSchema = newSeminarSchema.partial();
@@ -35,6 +36,7 @@ export const newSeminarSessionSchema = z.object({
   order: z.number().int(),
   readings: z.string().array(),
   notes: z.string().array(),
+  draft: z.boolean().default(true),
 });
 
 export const seminarSessionUpdateSchema = newSeminarSessionSchema.partial();

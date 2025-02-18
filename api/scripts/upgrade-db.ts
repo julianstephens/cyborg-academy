@@ -12,7 +12,7 @@ async function migrateToLatest() {
     provider: new FileMigrationProvider({
       fs,
       path,
-      migrationFolder: path.join(path.dirname(__filename), "migrations"),
+      migrationFolder: path.join(path.dirname(__filename), "..", "migrations"),
     }),
   });
 

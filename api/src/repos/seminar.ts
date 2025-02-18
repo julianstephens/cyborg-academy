@@ -9,6 +9,7 @@ const seminarSessions = (seminarId: Expression<string>) => {
     db
       .selectFrom("seminarSession")
       .selectAll()
+      .where("seminarSession.draft", "=", false)
       .where("seminarSession.seminarId", "=", seminarId),
   );
 };
@@ -16,15 +17,9 @@ const seminarSessions = (seminarId: Expression<string>) => {
 export async function findSeminarById(id: string) {
   return await db
     .selectFrom("seminar")
-    .where("id", "=", id)
+    .where("slug", "=", id)
     .selectAll()
-    .select((eb) => [
-      jsonArrayFrom(
-        eb
-          .selectFrom("seminarSession")
-          .whereRef("seminarSession.seminarId", "=", "seminar.id"),
-      ).as("sessions"),
-    ])
+    .select(({ ref }) => [seminarSessions(ref("seminar.id")).as("sessions")])
     .executeTakeFirst();
 }
 
@@ -37,6 +32,10 @@ export async function findSeminars(criteria: Partial<Seminar>) {
 
   if (criteria.title) {
     query = query.where("title", "=", criteria.title);
+  }
+
+  if (criteria.draft) {
+    query = query.where("draft", "=", criteria.draft);
   }
 
   if (criteria.createdAt) {

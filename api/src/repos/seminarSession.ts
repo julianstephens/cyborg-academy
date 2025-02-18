@@ -25,6 +25,10 @@ export async function findSeminarSessions(criteria: Partial<SeminarSession>) {
     query = query.where("title", "=", criteria.title);
   }
 
+  if (criteria.draft) {
+    query = query.where("draft", "=", criteria.draft);
+  }
+
   if (criteria.description) {
     query = query.where("description", "=", criteria.description);
   }
