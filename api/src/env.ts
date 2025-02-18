@@ -22,6 +22,8 @@ export const env = createEnv({
     DISCORD_GUILD_ID: z.string(),
     LOG_LEVEL: z.string().optional(),
     PORT: z.coerce.number(),
+    REDIS_HOST: z.string(),
+    REDIS_PASSWORD: z.string(),
   },
   emptyStringAsUndefined: true,
   runtimeEnv: process.env,
