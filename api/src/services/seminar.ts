@@ -1,20 +1,52 @@
 import { NewSeminar, SeminarUpdate } from "@/models";
 import * as repo from "@/repos/seminar";
 import { getTimestamp } from "@/utils";
-import type { Seminar } from "cyborg-utils";
+import { isEmpty, type Seminar } from "cyborg-utils";
 import { nanoid } from "nanoid";
+import S3Service from "./s3";
 
 class SeminarService {
-  genSlug = (title: string) => {
+  s3: S3Service;
+
+  constructor() {
+    this.s3 = new S3Service();
+  }
+
+  #genSlug = (title: string) => {
     return title.toLowerCase().replaceAll(" ", "-");
   };
 
-  get = async (id: string): Promise<Seminar | undefined> => {
-    return await repo.findSeminarById(id);
+  #populateRemoteResources = async (seminar: Seminar) => {
+    if (
+      seminar.sessions &&
+      seminar.sessions.length > 0 &&
+      !isEmpty(seminar.sessions[0])
+    ) {
+      seminar.sessions = (await Promise.all(
+        seminar.sessions.map(async (sess) => {
+          const readings = await this.s3.listReadings(seminar.slug, sess.order);
+          if (readings) sess.readings = readings;
+          return sess;
+        }),
+      )) as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+    }
+    return seminar;
   };
 
-  list = async (filters: Partial<Seminar> = {}) => {
-    return await repo.findSeminars(filters);
+  get = async (id: string): Promise<Seminar | undefined> => {
+    const seminar = await repo.findSeminarById(id);
+    return seminar ? await this.#populateRemoteResources(seminar) : seminar;
+  };
+
+  list = async (filters: Partial<Seminar> = { draft: false }) => {
+    const seminars = await repo.findSeminars(filters);
+    const res = [];
+
+    for (const seminar of seminars) {
+      const populatedSeminar = await this.#populateRemoteResources(seminar);
+      res.push(populatedSeminar);
+    }
+    return res;
   };
 
   create = async (
@@ -23,18 +55,19 @@ class SeminarService {
     const newSeminar: NewSeminar = {
       id: nanoid(),
       ...seminar,
-      slug: this.genSlug(seminar.title),
+      slug: this.#genSlug(seminar.title),
       createdAt: getTimestamp(),
       updatedAt: getTimestamp(),
     };
-    return await repo.createSeminar(newSeminar);
+    const s = await repo.createSeminar(newSeminar);
+    return await this.#populateRemoteResources(s);
   };
 
   update = async (id: string, updates: SeminarUpdate): Promise<Seminar> => {
     await repo.updateSeminar(id, { ...updates, updatedAt: getTimestamp() });
     const seminar = await repo.findSeminarById(id);
     if (!seminar) throw Error("unable to retrieve seminar");
-    return seminar;
+    return await this.#populateRemoteResources(seminar);
   };
 
   delete = async (id: string): Promise<Seminar | undefined> => {

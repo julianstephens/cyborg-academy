@@ -34,7 +34,7 @@ export const SeminarDisplay = ({ data }: { data: Seminar }) => {
             _hover={{ textDecorationColor: "blue.200", color: "blue.200" }}
             _disabled={{ pointerEvents: "none", textDecoration: "none" }}
             asChild
-            aria-disabled="true"
+            // aria-disabled="true"
           >
             <Link to={`/dashboard/${data.slug}`} state={data}>
               <Text>{data.title}</Text>

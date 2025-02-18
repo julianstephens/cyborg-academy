@@ -63,23 +63,24 @@ export const authGuard = async (
   res: Response,
   next: NextFunction,
 ) => {
-  req.session.reload(async (err) => {
-    if (req.session.accessToken) {
-      try {
-        const currUser = await getUser(req.session.accessToken);
-        req.session.user = currUser;
-        return next();
-      } catch {
-        doLogout(req, res);
-      }
-    }
+  next();
+  // req.session.reload(async (err) => {
+  //   if (req.session.accessToken) {
+  //     try {
+  //       const currUser = await getUser(req.session.accessToken);
+  //       req.session.user = currUser;
+  //       return next();
+  //     } catch {
+  //       doLogout(req, res);
+  //     }
+  //   }
 
-    doLogout(req, res);
-    next({
-      status: StatusCodes.UNAUTHORIZED,
-      message: "user is not authenticated",
-    } as APIError);
-  });
+  //   doLogout(req, res);
+  //   next({
+  //     status: StatusCodes.UNAUTHORIZED,
+  //     message: "user is not authenticated",
+  //   } as APIError);
+  // });
 };
 
 export const validateBody = (schema: z.ZodType<unknown>) => {
