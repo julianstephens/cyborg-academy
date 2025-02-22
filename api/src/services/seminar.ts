@@ -1,9 +1,11 @@
-import { NewSeminar, SeminarUpdate } from "@/models";
-import * as repo from "@/repos/seminar";
-import { getTimestamp } from "@/utils";
-import { isEmpty, type Seminar } from "cyborg-utils";
+import { NewSeminar, SeminarUpdate } from "@/models.js";
+import * as repo from "@/repos/seminar.js";
+import { S3Service } from "@/services";
+import { getTimestamp } from "@/utils.js";
+import { APIError, isEmpty, type Seminar } from "cyborg-utils";
+import { StatusCodes } from "http-status-codes";
 import { nanoid } from "nanoid";
-import S3Service from "./s3";
+import { PostgresError } from "pg-error-enum";
 
 class SeminarService {
   s3: S3Service;
@@ -59,8 +61,23 @@ class SeminarService {
       createdAt: getTimestamp(),
       updatedAt: getTimestamp(),
     };
-    const s = await repo.createSeminar(newSeminar);
-    return await this.#populateRemoteResources(s);
+    try {
+      const s = await repo.createSeminar(newSeminar);
+      return await this.#populateRemoteResources(s);
+    } catch (err: unknown) {
+      if (
+        err &&
+        typeof err === "object" &&
+        "code" in err &&
+        err.code === PostgresError.UNIQUE_VIOLATION
+      ) {
+        throw {
+          status: StatusCodes.CONFLICT,
+          message: `seminar with slug ${newSeminar.slug} already exists`,
+        } as APIError;
+      }
+      throw err;
+    }
   };
 
   update = async (id: string, updates: SeminarUpdate): Promise<Seminar> => {

@@ -1,15 +1,14 @@
 import Redis from "ioredis";
 import { env } from "./env";
-import IoRedisStore from "route-cache/ioRedisStore";
 import logger from "./logger";
 
 export const redisClient = new Redis({
   host: env.REDIS_HOST,
-  port: 6379,
+  port: process.env.NODE_ENV == "production" ? 6379 : 16379,
   password: env.REDIS_PASSWORD,
 });
 
-async function checkCacheConnection() {
+export async function checkCacheConnection() {
   try {
     await redisClient.get("ping");
     logger.info("cache connection healthy");
@@ -20,4 +19,35 @@ async function checkCacheConnection() {
 }
 await checkCacheConnection();
 
-export const cacheStore = new IoRedisStore(redisClient);
+export class RedisStore {
+  client: Redis;
+
+  constructor(client: Redis) {
+    this.client = client;
+  }
+
+  get = async (key: string) => {
+    const data = await this.client.get(key);
+    return data ? JSON.parse(data) : data;
+  };
+
+  set = async (key: string, value: object, ttl?: number) => {
+    if (ttl) {
+      return this.client.set(key, JSON.stringify(value), "EX", ttl);
+    }
+    return this.client.set(key, JSON.stringify(value));
+  };
+
+  lpush = async (key: string, value: string[]) => {
+    return this.client.lpush(key, ...value);
+  };
+
+  all = async (key: string) => {
+    return this.client.lrange(key, 0, -1);
+  };
+
+  del = async (key: string) => {
+    return this.client.del(key);
+  };
+}
+export const store = new RedisStore(redisClient);

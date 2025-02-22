@@ -1,21 +1,12 @@
 import winston from "winston";
+import { env } from "@/env.js";
 
 const options = {
-  file: {
-    level: "debug",
-    filename: `api-${Date.now()}.log`,
-    handleExceptions: true,
-    format: winston.format.combine(
-      winston.format.splat(),
-      winston.format.timestamp(),
-    ),
-    maxsize: 100 * 1024 * 1024,
-    maxFiles: 10,
-  },
   console: {
-    level: "debug",
-    handleExceptions: true,
+    level: process.env.NODE_ENV === "production" ? env.LOG_LEVEL : "debug",
+    handleExceptions: false,
     format: winston.format.combine(
+      winston.format.colorize(),
       winston.format.splat(),
       winston.format.timestamp(),
     ),
@@ -25,10 +16,8 @@ const options = {
 const logger = winston.createLogger({
   levels: winston.config.syslog.levels,
   transports: [
-    ...(process.env.NODE_ENV === "production"
-      ? [new winston.transports.File(options.file)]
-      : []),
     new winston.transports.Console(options.console),
+    new winston.transports.File({ filename: "tmp/combined.log" }),
   ],
   exitOnError: false,
 });

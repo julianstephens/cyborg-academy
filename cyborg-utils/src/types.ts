@@ -46,6 +46,7 @@ export interface SeminarSession {
 export interface RemoteResource {
   name: string;
   url: string;
+  essential?: boolean;
 }
 
 export interface ResponseWithMessage {

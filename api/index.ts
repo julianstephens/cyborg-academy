@@ -1,4 +1,4 @@
-import { pgPool } from "@/db";
+import { db, pgPool } from "@/db";
 import { env } from "@/env.js";
 import logger from "@/logger.js";
 import {
@@ -7,13 +7,12 @@ import {
   errorLogger,
   notFound,
 } from "@/middleware.js";
-import { cacheStore } from "@/redis";
+import { cacheStore, redisClient } from "@/redis";
 import authRouter from "@/routes/auth.js";
-import seminarRouter from "@/routes/seminar";
-import sessionRouter from "@/routes/seminarSession";
+import seminarRouter from "@/routes/seminar.js";
+import sessionRouter from "@/routes/seminarSession.js";
 import bodyParser from "body-parser";
 import pgSimple from "connect-pg-simple";
-import csurf from "csurf";
 import "dotenv/config";
 import express from "express";
 import "express-async-errors";
@@ -63,7 +62,6 @@ app.use(
     store: new pgSession({ pool: pgPool, errorLog: logger.error }),
   }),
 );
-app.use(csurf());
 
 app.get("/", (_, res) => {
   res.json({
@@ -79,8 +77,16 @@ app.use(notFound);
 app.use(errorLogger);
 app.use(errorHandler);
 
-app.listen(env.PORT, () => {
+const server = app.listen(env.PORT, () => {
   logger.info(`server listening on port: ${env.PORT}`);
+});
+
+process.on("SIGTERM", async () => {
+  await db.destroy();
+  await redisClient.quit();
+  server.close(() => {
+    logger.info("server shutdown");
+  });
 });
 
 export default app;

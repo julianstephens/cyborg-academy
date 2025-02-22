@@ -1,8 +1,10 @@
-import { db } from "@/db";
+import { get_db } from "@/db";
 import { NewSeminar, SeminarUpdate } from "@/models";
 import type { Seminar } from "cyborg-utils";
 import { Expression } from "kysely";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
+
+const db = await get_db();
 
 const seminarSessions = (seminarId: Expression<string>) => {
   return jsonArrayFrom(
@@ -24,10 +26,10 @@ export async function findSeminarById(id: string) {
 }
 
 export async function findSeminars(criteria: Partial<Seminar>) {
-  let query = db.selectFrom("seminar");
+  let query = db.selectFrom("seminar").selectAll();
 
   if (criteria.id) {
-    query = query.where("id", "=", criteria.id); // Kysely is immutable, you must re-assign!
+    query = query.where("id", "=", criteria.id);
   }
 
   if (criteria.title) {
@@ -47,7 +49,6 @@ export async function findSeminars(criteria: Partial<Seminar>) {
   }
 
   return await query
-    .selectAll()
     .select(({ ref }) => [seminarSessions(ref("seminar.id")).as("sessions")])
     .execute();
 }
@@ -56,7 +57,7 @@ export async function updateSeminar(id: string, updateWith: SeminarUpdate) {
   await db
     .updateTable("seminar")
     .set(updateWith)
-    .where("id", "=", id)
+    .where("slug", "=", id)
     .execute();
 }
 
@@ -71,7 +72,7 @@ export async function createSeminar(seminar: NewSeminar) {
 export async function deleteSeminar(id: string) {
   return await db
     .deleteFrom("seminar")
-    .where("id", "=", id)
+    .where("slug", "=", id)
     .returningAll()
     .executeTakeFirst();
 }

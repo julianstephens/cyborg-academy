@@ -1,7 +1,7 @@
 /* eslint @typescript-eslint/no-unused-vars: 1 */
-import { env } from "@/env";
-import logger from "@/logger";
-import { doLogout, getUser, IDError } from "@/utils";
+import { env } from "@/env.js";
+import logger from "@/logger.js";
+import { IDError } from "@/utils.js";
 import { apiErrorSchema, type APIError } from "cyborg-utils";
 import type { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
@@ -114,7 +114,7 @@ export const corsHeaders = (
 
   res.header("Access-Control-Allow-Methods", "*");
   res.header("Access-Control-Allow-Credentials", "true");
-  res.header("Access-Control-Expose-Headers", "X-Location");
+  res.header("Access-Control-Expose-Headers", "X-Location, X-Cache-Hit");
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Credential, Accept",
