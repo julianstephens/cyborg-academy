@@ -7,3 +7,13 @@ export const isEmpty = (obj: object) => {
 
   return true;
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const groupByKey = (list: any[], key: string) =>
+  list.reduce(
+    (hash, obj) => ({
+      ...hash,
+      [obj[key]]: (hash[obj[key]] || []).concat(obj),
+    }),
+    {},
+  );

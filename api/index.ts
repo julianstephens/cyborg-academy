@@ -7,7 +7,7 @@ import {
   errorLogger,
   notFound,
 } from "@/middleware.js";
-import { cacheStore, redisClient } from "@/redis";
+import { redisClient } from "@/redis";
 import authRouter from "@/routes/auth.js";
 import seminarRouter from "@/routes/seminar.js";
 import sessionRouter from "@/routes/seminarSession.js";
@@ -21,12 +21,9 @@ import helmet from "helmet";
 import hpp from "hpp";
 import { StatusCodes } from "http-status-codes";
 import morgan from "morgan";
-import routeCache from "route-cache";
 
 const app = express();
 const pgSession = pgSimple(session);
-
-routeCache.config({ cacheStore });
 
 app.use(corsHeaders);
 app.all("*", corsHeaders);

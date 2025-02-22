@@ -1,4 +1,5 @@
-import { env } from "@/env";
+import { env } from "@/env.js";
+import logger from "@/logger.js";
 import {
   GetObjectCommand,
   ListObjectsCommand,
@@ -33,20 +34,29 @@ class S3Service {
     seminar: string,
     session: number,
   ): Promise<RemoteResource[] | null> => {
-    const prefix = `${seminar}/${this.#pad(session)}/readings`;
-    const input: ListObjectsCommandInput = {
-      Bucket: env.BUCKET_NAME,
-      Prefix: prefix,
-    };
-    const command = new ListObjectsCommand(input);
-    const res = await this.s3.send(command);
-    if (!res.Contents) return null;
-
+    const rtypes = ["essential", "supplemental"];
     const readings: RemoteResource[] = [];
-    for (const o of res.Contents) {
-      if (!o.Key) continue;
-      const url = await this.getUrl(o.Key);
-      readings.push({ name: o.Key.slice(prefix.length + 1), url });
+    for (const t of rtypes) {
+      const prefix = `${seminar}/${this.#pad(session)}/readings/${t}`;
+      logger.info(prefix);
+      const input: ListObjectsCommandInput = {
+        Bucket: env.BUCKET_NAME,
+        Prefix: prefix,
+      };
+      const command = new ListObjectsCommand(input);
+      const res = await this.s3.send(command);
+      if (!res.Contents) return null;
+      for (const o of res.Contents) {
+        if (!o.Key) continue;
+        const url = await this.getUrl(o.Key);
+        const name = o.Key.slice(prefix.length + 1);
+        if (!name) continue;
+        readings.push({
+          name,
+          url,
+          essential: prefix.indexOf("essential") > 0,
+        });
+      }
     }
 
     return readings.length > 0 ? readings : null;
