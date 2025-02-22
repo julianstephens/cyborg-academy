@@ -5,7 +5,11 @@ meta {
 }
 
 get {
-  url: https://cyborg-academy.vercel.app/api/v1
+  url: {{baseUrl}}
   body: none
   auth: none
+}
+
+headers {
+  accept: application/json
 }
