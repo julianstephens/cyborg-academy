@@ -26,6 +26,8 @@ jobs:
         run: pnpm -F api... install
       - name: Run DB Migrations
         run: pnpm -F api migrate latest
+        env:
+          DOTENV_KEY: ${{ secrets.DOTENV_KEY }}
       - name: Setup fly
         uses: superfly/flyctl-actions/setup-flyctl@master
       - name: Deploy API
