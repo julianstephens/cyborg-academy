@@ -1,4 +1,5 @@
 import { get_db } from "@/db";
+import "dotenv/config";
 import { promises as fs } from "fs";
 import { FileMigrationProvider, Migrator } from "kysely";
 import { run } from "kysely-migration-cli";
