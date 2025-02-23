@@ -28,6 +28,8 @@ class SeminarService {
         seminar.sessions.map(async (sess) => {
           const readings = await this.s3.listReadings(seminar.slug, sess.order);
           if (readings) sess.readings = readings;
+          const notes = await this.s3.listNotes(seminar.slug, sess.order);
+          if (notes) sess.notes = notes;
           return sess;
         }),
       )) as any; // eslint-disable-line @typescript-eslint/no-explicit-any

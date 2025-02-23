@@ -1,6 +1,6 @@
 import { env } from "@/env.js";
-import logger from "@/logger.js";
 import {
+  _Object,
   GetObjectCommand,
   ListObjectsCommand,
   ListObjectsCommandInput,
@@ -30,6 +30,40 @@ class S3Service {
     return "" + num;
   };
 
+  #getUrl = async (key: string) => {
+    return await getSignedUrl(
+      this.s3,
+      new GetObjectCommand({ Bucket: env.BUCKET_NAME, Key: key }),
+    );
+  };
+
+  #listObjects = async (prefix: string) => {
+    const input: ListObjectsCommandInput = {
+      Bucket: env.BUCKET_NAME,
+      Prefix: prefix,
+    };
+    const command = new ListObjectsCommand(input);
+    const res = await this.s3.send(command);
+    return res.Contents;
+  };
+
+  #buildResource = async (
+    dtype: "reading" | "note",
+    data: _Object,
+    prefix: string,
+  ): Promise<RemoteResource> => {
+    if (!data.Key) throw Error;
+    const name = data.Key.slice(prefix.length + 1);
+    if (!name) throw Error;
+    return {
+      name,
+      url: await this.#getUrl(data.Key),
+      ...(dtype === "reading"
+        ? { essential: prefix.indexOf("essential") > 0 }
+        : {}),
+    };
+  };
+
   listReadings = async (
     seminar: string,
     session: number,
@@ -38,35 +72,39 @@ class S3Service {
     const readings: RemoteResource[] = [];
     for (const t of rtypes) {
       const prefix = `${seminar}/${this.#pad(session)}/readings/${t}`;
-      logger.info(prefix);
-      const input: ListObjectsCommandInput = {
-        Bucket: env.BUCKET_NAME,
-        Prefix: prefix,
-      };
-      const command = new ListObjectsCommand(input);
-      const res = await this.s3.send(command);
-      if (!res.Contents) return null;
-      for (const o of res.Contents) {
-        if (!o.Key) continue;
-        const url = await this.getUrl(o.Key);
-        const name = o.Key.slice(prefix.length + 1);
-        if (!name) continue;
-        readings.push({
-          name,
-          url,
-          essential: prefix.indexOf("essential") > 0,
-        });
+      const data = await this.#listObjects(prefix);
+      if (!data) return null;
+      for (const r of data) {
+        try {
+          const res = await this.#buildResource("reading", r, prefix);
+          readings.push(res);
+        } catch {
+          continue;
+        }
       }
     }
 
     return readings.length > 0 ? readings : null;
   };
 
-  getUrl = async (key: string) => {
-    return await getSignedUrl(
-      this.s3,
-      new GetObjectCommand({ Bucket: env.BUCKET_NAME, Key: key }),
-    );
+  listNotes = async (
+    seminar: string,
+    session: number,
+  ): Promise<RemoteResource[] | null> => {
+    const notes: RemoteResource[] = [];
+    const prefix = `${seminar}/${this.#pad(session)}/notes`;
+    const data = await this.#listObjects(prefix);
+    if (!data) return null;
+    for (const n of data) {
+      try {
+        const res = await this.#buildResource("note", n, prefix);
+        notes.push(res);
+      } catch {
+        continue;
+      }
+    }
+
+    return notes.length > 0 ? notes : null;
   };
 }
 

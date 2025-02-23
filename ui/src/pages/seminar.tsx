@@ -13,6 +13,9 @@ const SeminarPage = () => {
   const [seminar, setSeminar] = useState<Seminar>();
   const [title, setTitle] = useState("Seminar");
   const [seminarSlug, setSeminarSlug] = useState("");
+  const [lastUpdated, setLastUpdated] = useState<number>(
+    Math.floor(Date.now() / 1000),
+  );
   const goto = useNavigate();
 
   const { data, isError, isLoading } = useSeminar({
@@ -31,7 +34,7 @@ const SeminarPage = () => {
       toast.error("Something went wrong displaying seminar");
       goto("/dashboard");
     }
-  }, [slug]);
+  }, [slug, goto]);
 
   useEffect(() => {
     document.title = title;
@@ -41,6 +44,12 @@ const SeminarPage = () => {
     if (data && data.data) {
       setSeminar(data.data);
       setTitle(`${appName} | ${data.data.title}`);
+
+      let updated = data.data.updatedAt;
+      data.data.sessions?.forEach((s) => {
+        if (s.updatedAt > updated) updated = s.updatedAt;
+      });
+      setLastUpdated(updated);
     }
   }, [data, appName]);
 
@@ -83,7 +92,7 @@ const SeminarPage = () => {
             </Flex>
           </Show>
           <Text mt="auto" mx="auto" mb="4" color="gray.500">
-            Last updated {new Date(seminar.updatedAt * 1000).toLocaleString()}
+            Last updated {new Date(lastUpdated * 1000).toLocaleString()}
           </Text>
         </Flex>
       ) : isLoading ? (

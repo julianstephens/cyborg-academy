@@ -47,6 +47,7 @@ export interface RemoteResource {
   name: string;
   url: string;
   essential?: boolean;
+  content?: string;
 }
 
 export interface ResponseWithMessage {
