@@ -24,6 +24,11 @@ export const env = createEnv({
     PORT: z.coerce.number(),
     REDIS_HOST: z.string(),
     REDIS_PASSWORD: z.string(),
+    REDIS_PORT: z
+      .string()
+      .transform((val) => Number.parseInt(val))
+      .pipe(z.number())
+      .default("6379"),
   },
   emptyStringAsUndefined: true,
   runtimeEnv: process.env,

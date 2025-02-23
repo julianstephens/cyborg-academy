@@ -4,7 +4,7 @@ import logger from "./logger";
 
 export const redisClient = new Redis({
   host: env.REDIS_HOST,
-  port: process.env.NODE_ENV == "production" ? 6379 : 16379,
+  port: env.REDIS_PORT,
   password: env.REDIS_PASSWORD,
 });
 
