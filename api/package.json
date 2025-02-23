@@ -9,11 +9,9 @@
     "start": "NODE_ENV=production node ./dist/index.js",
     "build": "tsup",
     "migrate": "tsx ./scripts/migrate.ts",
-    "new": "tsx ./scripts/create-migration.ts",
     "seed": "tsx ./scripts/seed-db.ts",
     "seminar": "tsx ./scripts/create-seminar.ts",
-    "session": "tsx ./scripts/create-session.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "session": "tsx ./scripts/create-session.ts"
   },
   "keywords": [],
   "author": "",
