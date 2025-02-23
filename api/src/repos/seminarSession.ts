@@ -1,6 +1,8 @@
-import { db } from "@/db";
+import { get_db } from "@/db";
 import { NewSeminarSession, SeminarSessionUpdate } from "@/models";
 import type { SeminarSession } from "cyborg-utils";
+
+const db = await get_db();
 
 export async function findSeminarSessionById(id: string) {
   return await db
@@ -23,6 +25,10 @@ export async function findSeminarSessions(criteria: Partial<SeminarSession>) {
 
   if (criteria.title) {
     query = query.where("title", "=", criteria.title);
+  }
+
+  if (criteria.draft) {
+    query = query.where("draft", "=", criteria.draft);
   }
 
   if (criteria.description) {

@@ -26,7 +26,6 @@ export const Header = ({ user }: UserProp) => {
         <Heading
           size={{ base: "xl", lg: "3xl" }}
           _hover={{
-            // color: "#EFCB68",
             color: "blue.200",
             textDecorationColor: "blue.200",
             transition: "ease",

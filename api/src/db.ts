@@ -21,6 +21,29 @@ async function checkDatabaseConnection() {
 
 await checkDatabaseConnection();
 
-const dialect = new PostgresDialect({ pool: pgPool });
+export const db = new Kysely<Database>({
+  dialect: new PostgresDialect({ pool: pgPool }),
+  log(event) {
+    if (event.level === "error") {
+      logger.error({
+        event: "query",
+        durationMs: event.queryDurationMillis,
+        error: event.error,
+        sql: event.query.sql,
+        params: event.query.parameters,
+      });
+    } else {
+      logger.info({
+        event: "query",
+        durationMs: event.queryDurationMillis,
+        sql: event.query.sql,
+        params: event.query.parameters,
+      });
+    }
+  },
+});
 
-export const db = new Kysely<Database>({ dialect });
+export const get_db = async () => {
+  await checkDatabaseConnection();
+  return db;
+};

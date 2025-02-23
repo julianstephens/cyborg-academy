@@ -9,15 +9,32 @@ jobs:
   deploy:
     name: Deploy app
     runs-on: ubuntu-latest
-    concurrency: deploy-group    # optional: ensure only one action runs at a time
+    concurrency: deploy-group
     steps:
-      - uses: actions/checkout@v4
-      - uses: superfly/flyctl-actions/setup-flyctl@master
-      - name: Deploy API 
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm -F api... install
+      - name: Run DB Migrations
+        run: pnpm -F api migrate latest
+        env:
+          DOTENV_KEY: ${{ secrets.DOTENV_KEY }}
+      - name: Setup fly
+        uses: superfly/flyctl-actions/setup-flyctl@master
+      - name: Deploy API
         run: flyctl deploy --remote-only -c fly.api.toml
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_TOKEN_API }}
-      - name: Deploy UI 
+      - name: Deploy UI
         run: flyctl deploy --remote-only -c fly.ui.toml
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_TOKEN_UI }}

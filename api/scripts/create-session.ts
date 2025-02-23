@@ -11,8 +11,9 @@ const main = async () => {
     console.log("\nOptions:");
     console.log("  -s, --seminar            the seminar to link to");
     console.log("  -d, --description        the seminar description");
-    console.log("  -u, --unlocked           marks the seminar as unlocked");
+    console.log("  -u, --unlocked           marks the session as unlocked");
     console.log("  -o, --order              the display order");
+    console.log("  --public                 marks the session as not drafted");
     console.log("  -h, --help               print usage instructions");
     return;
   }
@@ -42,13 +43,16 @@ const main = async () => {
   const description = argv.d ?? argv.description;
 
   let locked = true;
+  let draft = true;
   if (argv.u || argv.unlocked) locked = false;
+  if (argv.public) draft = false;
 
   await sessionSVC.create({
     title,
     seminarId,
     order,
     locked,
+    draft,
     description,
   });
 

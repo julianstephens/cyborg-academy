@@ -16,6 +16,8 @@ const sessionSVC = new SeminarSessionService();
 router.get("/", async (req: Request, res: Response) => {
   const filters: Partial<SeminarSession> = {};
   if (req.query.title) filters.title = req.query.title as string;
+  if (req.query.draft)
+    filters.draft = (req.query.draft as string).toLowerCase() === "true";
   if (req.query.createdAt)
     filters.createdAt = parseInt(req.query.createdAt as string);
   if (req.query.updatedAt)
@@ -31,7 +33,7 @@ router.get("/:id", async (req: Request, res: Response) => {
   res.json({ data } as ResponseObject<SeminarSession>);
 });
 router.post(
-  "/session",
+  "/",
   validateBody(newSeminarSessionSchema),
   async (req: Request, res: Response) => {
     const data = await sessionSVC.create(req.body);

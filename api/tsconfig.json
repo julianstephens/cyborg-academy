@@ -8,14 +8,25 @@
     "resolveJsonModule": true,
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
+    "importModuleSpecifierEnding": "js",
     "esModuleInterop": true,
     "isolatedModules": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "cyborg-utils/*": ["../cyborg-utils/src/*"]
+      "@/*": [
+        "./src/*"
+      ],
+      "cyborg-utils/*": [
+        "../cyborg-utils/src/*"
+      ]
     }
   },
-  "exclude": ["dist"],
-  "references": [{ "path": "../cyborg-utils" }]
+  "exclude": [
+    "dist"
+  ],
+  "references": [
+    {
+      "path": "../cyborg-utils"
+    }
+  ]
 }

@@ -9,7 +9,13 @@ import { HelmetProvider } from "react-helmet-async";
 import { BrowserRouter } from "react-router";
 import { ToastContainer } from "react-toastify";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 10, // 10 minutes
+    },
+  },
+});
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
