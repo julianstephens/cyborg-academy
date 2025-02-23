@@ -1,7 +1,7 @@
 /* eslint @typescript-eslint/no-unused-vars: 1 */
 import { env } from "@/env.js";
 import logger from "@/logger.js";
-import { IDError } from "@/utils.js";
+import { doLogout, getUser, IDError } from "@/utils.js";
 import { apiErrorSchema, type APIError } from "cyborg-utils";
 import type { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
@@ -63,24 +63,23 @@ export const authGuard = async (
   res: Response,
   next: NextFunction,
 ) => {
-  next();
-  // req.session.reload(async (err) => {
-  //   if (req.session.accessToken) {
-  //     try {
-  //       const currUser = await getUser(req.session.accessToken);
-  //       req.session.user = currUser;
-  //       return next();
-  //     } catch {
-  //       doLogout(req, res);
-  //     }
-  //   }
+  req.session.reload(async (err) => {
+    if (req.session.accessToken) {
+      try {
+        const currUser = await getUser(req.session.accessToken);
+        req.session.user = currUser;
+        return next();
+      } catch {
+        doLogout(req, res);
+      }
+    }
 
-  //   doLogout(req, res);
-  //   next({
-  //     status: StatusCodes.UNAUTHORIZED,
-  //     message: "user is not authenticated",
-  //   } as APIError);
-  // });
+    doLogout(req, res);
+    next({
+      status: StatusCodes.UNAUTHORIZED,
+      message: "user is not authenticated",
+    } as APIError);
+  });
 };
 
 export const validateBody = (schema: z.ZodType<unknown>) => {

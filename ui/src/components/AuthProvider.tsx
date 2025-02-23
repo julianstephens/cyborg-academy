@@ -1,12 +1,13 @@
+import { getAuthMe } from "@/api-handlers";
 import { AuthContext } from "@/hooks";
 import { ChildrenProps } from "@/types";
 import { User } from "cyborg-utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 export const AuthProvider = ({ children }: ChildrenProps) => {
-  // const [isAuthenticated, setIsAuthenticated] = useState(false);
-  // const [checkedAuthStatus, setCheckedAuthStatus] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [checkedAuthStatus, setCheckedAuthStatus] = useState(false);
   const [user, setUser] = useState<User | undefined>();
   const goto = useNavigate();
 
@@ -29,36 +30,34 @@ export const AuthProvider = ({ children }: ChildrenProps) => {
       .catch((err) => console.error.bind(err));
   };
 
-  // const checkAuthStatus = async () => {
-  //   try {
-  //     const data = await getAuthMe();
-  //     if (data && data.data) {
-  //       setUser(data.data);
-  //       setIsAuthenticated(true);
-  //     } else {
-  //       setIsAuthenticated(false);
-  //       goto("/");
-  //     }
-  //   } catch {
-  //     setIsAuthenticated(false);
-  //     goto("/");
-  //   }
-  //   setCheckedAuthStatus(true);
-  // };
+  const checkAuthStatus = async () => {
+    try {
+      const data = await getAuthMe();
+      if (data && data.data) {
+        setUser(data.data);
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+        goto("/");
+      }
+    } catch {
+      setIsAuthenticated(false);
+      goto("/");
+    }
+    setCheckedAuthStatus(true);
+  };
 
-  // useEffect(() => {
-  //   if (!user) {
-  //     checkAuthStatus();
-  //   }
-  // }, [user, isAuthenticated]);
+  useEffect(() => {
+    if (!user) {
+      checkAuthStatus();
+    }
+  }, [user, isAuthenticated]);
 
   return (
     <AuthContext.Provider
       value={{
-        // checkedAuthStatus,
-        // isAuthenticated,
-        checkedAuthStatus: true,
-        isAuthenticated: true,
+        checkedAuthStatus,
+        isAuthenticated,
         user,
         login,
         logout,

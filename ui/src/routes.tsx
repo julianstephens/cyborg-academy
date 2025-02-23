@@ -1,3 +1,4 @@
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import DashboardPage from "@/pages/dashboard";
 import LandingPage from "@/pages/landing";
 import NotFoundPage from "@/pages/not-found";
@@ -10,21 +11,19 @@ const AppRoutes = () => {
       <Route path="/" element={<LandingPage />} />
       <Route
         path="/dashboard"
-        element={<DashboardPage />}
-        // element={
-        //   <ProtectedRoute>
-        //     <DashboardPage />
-        //   </ProtectedRoute>
-        // }
+        element={
+          <ProtectedRoute>
+            <DashboardPage />
+          </ProtectedRoute>
+        }
       />
       <Route
         path="/dashboard/:slug"
-        element={<SeminarPage />}
-        // element={
-        //   <ProtectedRoute>
-        //     <SeminarPage />
-        //   </ProtectedRoute>
-        // }
+        element={
+          <ProtectedRoute>
+            <SeminarPage />
+          </ProtectedRoute>
+        }
       />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

@@ -3,7 +3,7 @@ import { useAppInfo, useSeminar } from "@/hooks";
 import { Flex, For, Heading, Show, Spinner, Text } from "@chakra-ui/react";
 import { type Seminar, isEmpty } from "cyborg-utils";
 import { useEffect, useState } from "react";
-// import { Helmet } from "react-helmet-async";
+import { Helmet } from "react-helmet-async";
 import { useNavigate, useParams } from "react-router";
 import { toast } from "react-toastify";
 
@@ -63,12 +63,12 @@ const SeminarPage = () => {
           align="center"
           direction="column"
         >
-          {/* <Helmet> */}
-          {/*   <title>{title}</title> */}
-          {/*   <Show when={seminar.description}> */}
-          {/*     <meta name="description" content={seminar.description} /> */}
-          {/*   </Show> */}
-          {/* </Helmet> */}
+          <Helmet>
+            <title>{title}</title>
+            <Show when={seminar.description}>
+              <meta name="description" content={seminar.description} />
+            </Show>
+          </Helmet>
           <Heading size="3xl" textAlign="center">
             {seminar.title}
           </Heading>
