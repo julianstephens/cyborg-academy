@@ -6,6 +6,7 @@ export const redisClient = new Redis({
   host: env.REDIS_HOST,
   port: env.REDIS_PORT,
   password: env.REDIS_PASSWORD,
+  family: 6,
 });
 
 export async function checkCacheConnection() {
