@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      tsx:
+        specifier: ^4.19.2
+        version: 4.19.2
     devDependencies:
       '@tanstack/eslint-plugin-query':
         specifier: ^5.66.0

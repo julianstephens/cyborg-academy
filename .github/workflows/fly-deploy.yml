@@ -25,7 +25,7 @@ jobs:
       - name: Install dependencies
         run: pnpm -F api... install
       - name: Run DB Migrations
-        run: pnpm -F api migrate latest
+        run: pnpm tsx api/scripts/migrate.ts latest
         env:
           DOTENV_KEY: ${{ secrets.DOTENV_KEY }}
       - name: Setup fly
