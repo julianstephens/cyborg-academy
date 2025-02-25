@@ -45,6 +45,7 @@ export const createSeminar = async (
 ): Promise<Seminar> => {
   try {
     const res = await fetch(`${import.meta.env.VITE_API_URL}/seminars`, {
+      ...opts,
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -61,6 +62,7 @@ export const createSeminar = async (
 export const deleteSeminar = async (slug: string): Promise<void> => {
   try {
     await fetch(`${import.meta.env.VITE_API_URL}/seminars/${slug}`, {
+      ...opts,
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -76,6 +78,7 @@ export const createSeminarSession = async (
 ): Promise<SeminarSession> => {
   try {
     const res = await fetch(`${import.meta.env.VITE_API_URL}/sessions`, {
+      ...opts,
       method: "POST",
       headers: {
         "Content-Type": "application/json",
