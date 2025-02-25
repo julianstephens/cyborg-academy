@@ -16,6 +16,11 @@ export interface User {
   };
 }
 
+export interface AuthSession {
+  user: User;
+  isAdmin: boolean;
+}
+
 export interface Seminar {
   id: string;
   title: string;

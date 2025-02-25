@@ -26,7 +26,11 @@ export const newSeminarSchema = z.object({
   draft: z.boolean(),
 });
 
+export type NewSeminar = z.infer<typeof newSeminarSchema>;
+
 export const seminarUpdateSchema = newSeminarSchema.partial();
+
+export type PartialSeminar = z.infer<typeof seminarUpdateSchema>;
 
 export const newSeminarSessionSchema = z.object({
   title: z.string(),
@@ -38,5 +42,7 @@ export const newSeminarSessionSchema = z.object({
   notes: z.string().array(),
   draft: z.boolean(),
 });
+
+export type NewSeminarSession = z.infer<typeof newSeminarSessionSchema>;
 
 export const seminarSessionUpdateSchema = newSeminarSessionSchema.partial();

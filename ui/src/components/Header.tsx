@@ -6,8 +6,8 @@ import {
   MenuTrigger,
 } from "@/components/ui/menu";
 import { useAppInfo, useAuth } from "@/hooks";
-import { UserProp } from "@/types";
 import { Button, Flex, Heading } from "@chakra-ui/react";
+import type { AuthSession } from "cyborg-utils";
 import { Link } from "react-router";
 
 const colorPalette = ["red", "blue", "green", "yellow", "purple", "orange"];
@@ -17,8 +17,8 @@ const pickPalette = (name: string) => {
   return colorPalette[index];
 };
 
-export const Header = ({ user }: UserProp) => {
-  const { logout } = useAuth();
+export const Header = ({ user }: Pick<AuthSession, "user">) => {
+  const { isAdmin, logout } = useAuth();
   const { appName } = useAppInfo();
   return (
     <Flex w="full" mb="12" justify="space-between">
@@ -48,6 +48,11 @@ export const Header = ({ user }: UserProp) => {
             </Button>
           </MenuTrigger>
           <MenuContent mt="4">
+            {isAdmin && (
+              <MenuItem fontSize="xl" value="admin" asChild>
+                <Link to="/admin">Admin</Link>
+              </MenuItem>
+            )}
             <MenuItem fontSize="xl" value="logout" onClick={logout}>
               Logout
             </MenuItem>

@@ -8,6 +8,6 @@ deploy:
 proxy:
 	@fly redis proxy -o cyborgdev
 
-env:
+keys:
 	@pnpm dlx dotenv-vault build
 	@pnpm dlx dotenv-vault keys | grep production

@@ -1,7 +1,8 @@
+import { env } from "@/env";
 import { authGuard } from "@/middleware";
 import { OauthService } from "@/services";
 import { doLogout } from "@/utils";
-import type { ResponseObject, User } from "cyborg-utils";
+import type { AuthSession, ResponseObject } from "cyborg-utils";
 import { Router, type Request, type Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
@@ -12,8 +13,11 @@ const oauth = new OauthService();
 router.get("/discord", oauth.authorize);
 router.get("/discord/callback", oauth.exchange);
 router.get("/me", authGuard, (req: Request, res: Response) => {
-  const data: ResponseObject<User> = {
-    data: req.session.user,
+  const data: ResponseObject<AuthSession> = {
+    data: {
+      user: req.session.user,
+      isAdmin: env.ADMIN_USERS.indexOf(req.session.user?.id) > 0,
+    },
   };
   res.json(data);
 });

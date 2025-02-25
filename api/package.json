@@ -8,10 +8,7 @@
     "dev": "DEBUG=express:* tsx --watch ./index.ts",
     "start": "NODE_ENV=production node ./dist/index.js",
     "build": "tsup",
-    "migrate": "tsx ./scripts/migrate.ts",
-    "seed": "tsx ./scripts/seed-db.ts",
-    "seminar": "tsx ./scripts/create-seminar.ts",
-    "session": "tsx ./scripts/create-session.ts"
+    "seed": "tsx ./scripts/seed-db.ts"
   },
   "keywords": [],
   "author": "",
