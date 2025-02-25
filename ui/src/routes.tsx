@@ -1,3 +1,4 @@
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import AdminPage from "@/pages/admin";
 import DashboardPage from "@/pages/dashboard";
 import LandingPage from "@/pages/landing";
@@ -11,23 +12,28 @@ const AppRoutes = () => {
       <Route path="/" element={<LandingPage />} />
       <Route
         path="/dashboard"
-        // element={
-        //   <ProtectedRoute>
-        //     <DashboardPage />
-        //   </ProtectedRoute>
-        // }
-        element={<DashboardPage />}
+        element={
+          <ProtectedRoute>
+            <DashboardPage />
+          </ProtectedRoute>
+        }
       />
       <Route
         path="/dashboard/:slug"
-        // element={
-        //   <ProtectedRoute>
-        //     <SeminarPage />
-        //   </ProtectedRoute>
-        // }
-        element={<SeminarPage />}
+        element={
+          <ProtectedRoute>
+            <SeminarPage />
+          </ProtectedRoute>
+        }
       />
-      <Route path="/admin" element={<AdminPage />} />
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute>
+            <AdminPage />
+          </ProtectedRoute>
+        }
+      />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
