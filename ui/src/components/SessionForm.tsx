@@ -6,6 +6,7 @@ import {
   NumberInputRoot,
 } from "@/components/ui/number-input";
 import { Switch } from "@/components/ui/switch";
+import queryClient from "@/query-client";
 import type { FormError, SelectOption } from "@/types";
 import { Button, Fieldset, HStack, Input } from "@chakra-ui/react";
 import { Select } from "chakra-react-select";
@@ -42,6 +43,9 @@ export const SessionForm = ({ seminars }: { seminars: SelectOption[] }) => {
     } else {
       try {
         const session = await createSeminarSession(res.data);
+        await queryClient.invalidateQueries({
+          queryKey: [`${import.meta.env.VITE_API_URL}/seminars`],
+        });
         toast.success(`Created new seminar session ${session.title}!`, {
           toastId: "sessSuccess",
         });
