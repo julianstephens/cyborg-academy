@@ -55,6 +55,13 @@ const SeminarPage = () => {
 
   return (
     <>
+      <Helmet>
+        <title>{title}</title>
+        <meta
+          name="description"
+          content={seminar?.description ?? "Seminar detailed view"}
+        />
+      </Helmet>
       {seminar ? (
         <Flex
           id="seminarContainer"
@@ -63,12 +70,6 @@ const SeminarPage = () => {
           align="center"
           direction="column"
         >
-          <Helmet>
-            <title>{title}</title>
-            <Show when={seminar.description}>
-              <meta name="description" content={seminar.description} />
-            </Show>
-          </Helmet>
           <Heading size="3xl" textAlign="center">
             {seminar.title}
           </Heading>
