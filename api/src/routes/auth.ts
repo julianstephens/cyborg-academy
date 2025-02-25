@@ -16,7 +16,7 @@ router.get("/me", authGuard, (req: Request, res: Response) => {
   const data: ResponseObject<AuthSession> = {
     data: {
       user: req.session.user,
-      isAdmin: env.ADMIN_USERS.indexOf(req.session.user?.id) > 0,
+      isAdmin: env.ADMIN_USERS.indexOf(req.session.user?.id) >= 0,
     },
   };
   res.json(data);

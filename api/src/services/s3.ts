@@ -59,7 +59,7 @@ class S3Service {
       name,
       url: await this.#getUrl(data.Key),
       ...(dtype === "reading"
-        ? { essential: prefix.indexOf("essential") > 0 }
+        ? { essential: prefix.indexOf("essential") >= 0 }
         : {}),
     };
   };
