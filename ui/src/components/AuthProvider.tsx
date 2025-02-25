@@ -9,6 +9,7 @@ export const AuthProvider = ({ children }: ChildrenProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [checkedAuthStatus, setCheckedAuthStatus] = useState(false);
   const [user, setUser] = useState<User | undefined>();
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const goto = useNavigate();
 
   const login = async () => {
@@ -34,7 +35,8 @@ export const AuthProvider = ({ children }: ChildrenProps) => {
     try {
       const data = await getAuthMe();
       if (data && data.data) {
-        setUser(data.data);
+        setUser(data.data.user);
+        setIsAdmin(data.data.isAdmin);
         setIsAuthenticated(true);
       } else {
         setIsAuthenticated(false);
@@ -51,7 +53,7 @@ export const AuthProvider = ({ children }: ChildrenProps) => {
     if (!user) {
       checkAuthStatus();
     }
-  }, [user, isAuthenticated]);
+  }, [user, isAuthenticated, checkAuthStatus]);
 
   return (
     <AuthContext.Provider
@@ -59,6 +61,7 @@ export const AuthProvider = ({ children }: ChildrenProps) => {
         checkedAuthStatus,
         isAuthenticated,
         user,
+        isAdmin,
         login,
         logout,
       }}

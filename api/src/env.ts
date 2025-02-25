@@ -3,6 +3,10 @@ import { z } from "zod";
 
 export const env = createEnv({
   server: {
+    ADMIN_USERS: z
+      .string()
+      .transform((value) => value.split(","))
+      .pipe(z.string().array()),
     ALLOWED_ORIGINS: z
       .string()
       .transform((value) => value.split(","))
