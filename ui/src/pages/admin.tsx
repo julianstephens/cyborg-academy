@@ -6,7 +6,6 @@ import { useAppInfo, useSeminars } from "@/hooks";
 import { Flex, Heading, Show, Text } from "@chakra-ui/react";
 import { useEffect, useMemo, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Link } from "react-router";
 
 const AdminPage = () => {
   const { appName } = useAppInfo();
@@ -37,24 +36,9 @@ const AdminPage = () => {
         />
       </Helmet>
       <Flex direction="column" w="full" h="full">
-        <Flex w="full" justify="space-between">
-          <Link to="/">
-            <Heading
-              size={{ base: "xl", lg: "3xl" }}
-              _hover={{
-                color: "blue.200",
-                textDecorationColor: "blue.200",
-                transition: "ease",
-                transitionDuration: "moderate",
-              }}
-            >
-              {appName}
-            </Heading>
-          </Link>
-          <Heading textAlign="center" fontSize={{ base: "xl", lg: "2xl" }}>
-            Admin Page
-          </Heading>
-        </Flex>
+        <Heading textAlign="center" fontSize={{ base: "xl", lg: "2xl" }}>
+          Admin Page
+        </Heading>
         <Flex w="full" justify="end" align="center" gap="4" mt="20">
           <Modal title="Create Seminar">
             <SeminarForm />

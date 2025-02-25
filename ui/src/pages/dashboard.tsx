@@ -1,8 +1,6 @@
-import { Header } from "@/components/Header";
 import { SeminarDisplay } from "@/components/Seminar";
 import { useAppInfo, useSeminars } from "@/hooks";
 import { Flex, Heading, Show, Spinner, Text } from "@chakra-ui/react";
-import { User } from "cyborg-utils";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { toast } from "react-toastify";
@@ -28,7 +26,6 @@ const DashboardPage = () => {
 
   return (
     <Show when={!isError} fallback={<Text>Something went wrong :(</Text>}>
-      <Header user={{} as User} />
       <Flex
         w="full"
         h="full"
